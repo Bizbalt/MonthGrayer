@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Colored Buttons</title>
+    <style>
+        .button {
+            background-color: #3d4d5d;
+            margin: 5px;
+            padding: 8px 16px;
+            border: #44494d 3px solid;
+            border-radius: 4px;
+            color: #000000;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .grey {
+            background-color: grey;
+        }
+        .green {
+            background-color: green;
+        }
+
+        .orange {
+            background-color: orange;
+        }
+
+
+    </style>
+</head>
+<body style="background: #2b2b2c">
+    <div id="buttonContainer"></div>
+
+    <script>
+        // Example array containing zeros, ones, and twos
+        const array = [1, 1, 2, 1, 0, 2, 2, 0];
+
+        const buttonContainer = document.getElementById('buttonContainer');
+
+        // Iterate through the array and create buttons based on the values
+        array.forEach(value => {
+            const button = document.createElement('button');
+            button.textContent = value;
+
+            // Apply appropriate class based on the value to set the color
+            if (value === 0) {
+                button.classList.add('grey');
+            } else if (value === 1) {
+                button.classList.add('green');
+            } else if (value === 2) {
+                button.classList.add('orange');
+            }
+
+            button.classList.add('button');
+            buttonContainer.appendChild(button);
+        });
+    </script>
+
+    <div id="calendarContainer"></div>
+
+    <script>
+        // Get the current date
+        const today = new Date();
+
+        // Get the year and month (January is 0, December is 11)
+        const year = today.getFullYear();
+        const month = today.getMonth();
+
+        // Get the first day and total days in the month
+        const firstDay = new Date(year, month, 1).getDay(); // Sunday is 0, Monday is 1, ...
+        const totalDays = new Date(year, month + 1, 0).getDate(); // Number of days in the month
+
+        const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        const calendarContainer = document.getElementById('calendarContainer');
+
+        // Create header row with weekday names
+        const headerRow = document.createElement('div');
+        headerRow.classList.add('row');
+        weekdays.forEach(day => {
+            const cell = document.createElement('div');
+            cell.textContent = day;
+            headerRow.appendChild(cell);
+        });
+        calendarContainer.appendChild(headerRow);
+
+        // Create rows for each week
+        let dayCounter = 1;
+        for (let i = 0; i < 6; i++) { // Assuming maximum 6 weeks in a month
+            const weekRow = document.createElement('div');
+            weekRow.classList.add('row');
+
+            for (let j = 0; j < 7; j++) { // Seven days in a week
+                const cell = document.createElement('button');
+                cell.classList.add('button');
+
+                if ((i === 0 && j < firstDay) || dayCounter > totalDays) {
+                    cell.textContent = '';
+                } else {
+                    cell.textContent = dayCounter;
+                    dayCounter++;
+                }
+
+                weekRow.appendChild(cell);
+            }
+
+            calendarContainer.appendChild(weekRow);
+        }
+    </script>
+</body>
+</html>
