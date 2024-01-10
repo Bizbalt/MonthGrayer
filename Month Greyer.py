@@ -1,6 +1,5 @@
 import calendar
 import datetime
-import numpy as np
 
 '''
 import calendar
@@ -59,7 +58,7 @@ class MonthGreyer:
         if grey_arr:
             self.grey_arr = grey_arr
         else:  # if the class is completely new, the days are all set green
-            self.grey_arr = np.array([[1, None]*self.days_in_month])
+            self.grey_arr = [[1, None] for i in range(self.days_in_month)]
 
     def __str__(self):  # https://docs.python.org/3.8/library/datetime.html#strftime-strptime-behavior
         return datetime.date(
@@ -67,11 +66,11 @@ class MonthGreyer:
                                                ) + self.user
 
     def grey_day(self, day: int):
-        self.grey_arr[day-1] = 0, self.user
+        self.grey_arr[day-1] = [0, self.user]
 
     def free_day(self, day: int):
-        if self.grey_arr[day-1, 1] == self.user:
-            self.grey_arr[day-1] = 2, None
+        if self.grey_arr[day-1][1] == str(self.user):
+            self.grey_arr[day-1] = [2, None]
         else:
             flash(day-1)
 

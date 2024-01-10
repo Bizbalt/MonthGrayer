@@ -15,7 +15,7 @@ def about(page_number):
 
 @views.route("/cal")
 def personal_message():
-    args = request.args  # send query with "/cal?msg=dec"
+    args = request.args  # send query with "/cal?msg=10"
     msg = "Month chosen " + args.get("msg")
     import calendar
     msg2 = calendar.month(2023, int(args.get("msg")))
