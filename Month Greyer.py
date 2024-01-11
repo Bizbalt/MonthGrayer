@@ -1,5 +1,5 @@
 import calendar
-import datetime
+from datetime import datetime, timedelta, date
 
 '''
 import calendar
@@ -28,8 +28,9 @@ How do I display the calender via raspy on a website? ask Nialing maybe. Hopeful
  css. The Site should just update if somebody looks up the site or enters a new entry. The information could be saved
   file-wise per month on the raspy.
 
-I need a file format: array  for each day: 0-gray, 1-green, 2 orange. Every days "number" should also have none or the
- respective changer so one can see what he changed only.
+I need a file format: array  for each day: 0-gray, "none"-green, 2 orange. Every days "number" should also have none or the
+ respective changer so one can see what he changed only. So I actually need a fourth color 1-dark grey so the person
+  which grayed it can see that he can ungray it.
 Storing wise the greying of persons should be stored and if not applicable, the greying
  for the "group"-account. Then on load the overall greying should be computed out of those. 
 
@@ -44,45 +45,66 @@ def flash(day):
     pass
 
 
-# ToDo: how are calenders usally stored? What is the typical format?
-# the monthgreyer class should take in a time frame and
-class MonthGreyer:
-    def __init__(self, year, month, current_user, grey_arr=None):
-        self.year = year
-        self.month = month
-        self.user = current_user
-        # creating the array of dates of days
-        first_weekday, self.days_in_month = calendar.monthrange(year, month)
-        self.days = [datetime.date(year, month, day + 1) for day in range(self.days_in_month)]
+# I build a dictionary for storage of all infos
+def load_user_dictionary():
+    # search for file, if not present create one
+    # returning empty dict now just for testing:
+    return dict()
 
-        if grey_arr:
-            self.grey_arr = grey_arr
-        else:  # if the class is completely new, the days are all set green
-            self.grey_arr = [[1, None] for i in range(self.days_in_month)]
+
+def load_group_dictionary():
+    # see above
+    return dict()
+
+
+# TODO: Do I want dictionaries for every Person and the group or maybe every group?
+#  a good idea rn seems to be users only and a group dic for the interface gets created when needed.
+#  Since I also sometimes need groups as combinations of groups for a user who is in multiple - like me :P
+#
+class MonthGreyer:
+    def __init__(self, current_user, day_range=60):
+        self.all_markings = load_group_dictionary()
+        self.user = current_user
+        self.markings = load_user_dictionary()
+        self.today = datetime.today()
+        end_date = self.today + timedelta(days=day_range)
+
+        self.days = [self.today + timedelta(days=i) for i in range((self.today - end_date).days)]
+        #first_weekday, self.days_in_month = calendar.monthrange(year, month)
 
     def __str__(self):  # https://docs.python.org/3.8/library/datetime.html#strftime-strptime-behavior
-        return datetime.date(
-            self.year, self.month, 1).strftime("MonthGreyer for %B of the year %Y for the user "
+        return date(
+            self.today.year, self.today.month, 1).strftime("MonthGreyer for %B of the year %Y for the user "
                                                ) + self.user
 
-    def grey_day(self, day: int):
-        self.grey_arr[day-1] = [0, self.user]
+    def grey_day(self, day: datetime.date):
+        self.markings[day] = "grayed"
 
-    def free_day(self, day: int):
-        if self.grey_arr[day-1][1] == str(self.user):
-            self.grey_arr[day-1] = [2, None]
+    def free_day(self, day: datetime.date):
+        if day in self.markings and self.markings[day] == "grayed":
+            self.markings[day] = "freed"
         else:
-            flash(day-1)
+            flash(day)
 
-    def get_month_days_color(self):
-        return self.grey_arr[:, 0]
+    def get_markings(self):
+        return self.markings
 
+
+def date_range(start, end):
+    start_date = datetime.strptime(start, '%Y-%m-%d').date()
+    end_date = datetime.strptime(end, '%Y-%m-%d').date()
+    delta = end_date - start_date
+    days = [start_date + timedelta(days=i) for i in range(delta.days + 1)]
+    return days
+
+
+print(date_range("2023-12-28", "2024-01-20"))
 
 # testing:
-my_month = MonthGreyer(2022, 12, "Nex")
+my_month = MonthGreyer("Nex")
 print(my_month)
 my_month.grey_day(1)
 my_month.grey_day(3)
 my_month.free_day(1)
 my_month.free_day(2)
-print(my_month.grey_arr)
+print(my_month.get_markings())
