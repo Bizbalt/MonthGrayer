@@ -9,7 +9,6 @@ import locale
 locale.setlocale(locale.LC_TIME, "de_DE")
 '''
 
-
 '''
 An alternative Doodle in which you cross-out on which days you are not available (on default, if you can only on a few
  days "greening" should also be possible ;). At best there will be a calendar where you grey-out if you don't have time.
@@ -36,6 +35,9 @@ Storing wise the greying of persons should be stored and if not applicable, the 
 
 Standard look should be dark, so I better go inspired by the Dracula theme with dark grey background grey boxes. The
  greying makes dark grey, otherwise it's a dimmed green, a dimmed orange :shrug:
+
+the program should notice which day the last day was, everybody has seen, and then check if in the time from now to
+ this specific last shared date any dates exist where everybody has time. 
 '''
 
 
@@ -52,8 +54,14 @@ def load_user_dictionary():
     return dict()
 
 
-def load_group_dictionary():
+def load_user_groups(user):
     # see above
+    return dict()
+
+
+def generate_group_dictionary(group):
+    # see above
+    # compute group from users
     return dict()
 
 
@@ -63,19 +71,20 @@ def load_group_dictionary():
 #
 class MonthGreyer:
     def __init__(self, current_user, day_range=60):
-        self.all_markings = load_group_dictionary()
         self.user = current_user
+        self.user_groups = load_user_groups(self.user)
+        self.all_markings = generate_group_dictionary(self.user_groups)
         self.markings = load_user_dictionary()
         self.today = datetime.today()
         end_date = self.today + timedelta(days=day_range)
 
         self.days = [self.today + timedelta(days=i) for i in range((self.today - end_date).days)]
-        #first_weekday, self.days_in_month = calendar.monthrange(year, month)
+        # first_weekday, self.days_in_month = calendar.monthrange(year, month)
 
     def __str__(self):  # https://docs.python.org/3.8/library/datetime.html#strftime-strptime-behavior
         return date(
             self.today.year, self.today.month, 1).strftime("MonthGreyer for %B of the year %Y for the user "
-                                               ) + self.user
+                                                           ) + self.user
 
     def grey_day(self, day: datetime.date):
         self.markings[day] = "grayed"
@@ -98,13 +107,13 @@ def date_range(start, end):
     return days
 
 
-print(date_range("2023-12-28", "2024-01-20"))
-
-# testing:
-my_month = MonthGreyer("Nex")
-print(my_month)
-my_month.grey_day(1)
-my_month.grey_day(3)
-my_month.free_day(1)
-my_month.free_day(2)
-print(my_month.get_markings())
+# print(date_range("2023-12-28", "2024-01-20"))
+#
+# # testing:
+# my_month = MonthGreyer("Nex")
+# print(my_month)
+# my_month.grey_day(1)
+# my_month.grey_day(3)
+# my_month.free_day(1)
+# my_month.free_day(2)
+# print(my_month.get_markings())

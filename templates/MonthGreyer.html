@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Colored Buttons</title>
     <style>
@@ -19,16 +19,52 @@
         .green {
             background-color: green;
         }
-
         .orange {
             background-color: orange;
         }
-
+        .dark_grey {
+            background-color: #545454;
+        }
+        p1 {
+            font-size: 50px;
+            color: white;
+            font-family: "Arial Black", serif;
+        }
 
     </style>
 </head>
-<body style="background: #2b2b2c">
-    <div id="buttonContainer"></div>
+<body style="background: #2b2b2c; text-align: center">
+<p1 style>
+    Month Grayer
+</p1>
+<br>
+<input type="text"
+       id="current_user"
+       style="text-align: center"
+       autofocus="autofocus"
+       size="30"
+       placeholder="... Name, Nick, initials, Pseudonym ..."
+       onkeydown="this.style.width = Math.max(((this.value.length + 1) * 8),30*8) + 'px'">
+<br>
+<br>
+
+<script>
+// pythonCommand can be any code in python
+function ExecPythonCommand(pythonCommand){
+    var request = new XMLHttpRequest()
+    var user = document.getElementById("current_user").value
+    request.open("GET", "/" + pythonCommand + "(" + user + ")", true)
+    request.send()
+}
+</script>
+<button type="button" onclick="ExecPythonCommand('update')">i'm a button</button>
+
+<br>
+<br>
+<br>
+
+
+<div id="buttonContainer"></div>
 
     <script>
         // Example array containing zeros, ones, and twos
