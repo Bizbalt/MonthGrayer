@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, jsonify
 from MonthGreyer import MonthGreyer
 views = Blueprint(__name__, "views")
 
+user = "none"
+
 
 @views.route("/")
 def home():
@@ -35,23 +37,28 @@ def intro_page():
     return render_template("MonthGreyer.html")
 
 
-# aJaX request from input into the "current_user" field
-# @views.get("/update")
-def update(user):
-    print("function called")
+@views.route('/user/<username>')
+def command(username=None):
+
     # checking for existing user - might not exist yet
-    with open("users.txt", "r") as f:
-        users = f.readlines()
+    users = open("users.txt").read().splitlines()
+
+    if username in users:
+        month_greyer = MonthGreyer(username)
+    else:
+        return ("none")
+
     # if user exists, load his data
     if request.method == "POST":
         if request.form["current_user"] in users:
             pass
     # else create new user
     calendar_data = MonthGreyer(user)
+    print(username)
+
+    return jsonify(calendar_data.get_markings())
 
 
-@views.route('/<FUNCTION>')
-def command(FUNCTION=None):
-    exec(FUNCTION.replace("<br>", "\n"))
-    print("executed function")
-    return ""
+@views.route("/button_fade")
+def button_fade():
+    return render_template("button_fade.html")

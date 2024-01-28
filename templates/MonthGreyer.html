@@ -25,48 +25,72 @@
         .dark_grey {
             background-color: #545454;
         }
-        p1 {
+        h1 {
             font-size: 50px;
             color: white;
             font-family: "Arial Black", serif;
         }
 
+        /* Initial state of the containers to fade in */
+        .button-container {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
     </style>
 </head>
+
 <body style="background: #2b2b2c; text-align: center">
-<p1 style>
+<h1 style>
     Month Grayer
-</p1>
+</h1>
 <br>
+<script>
+// pythonCommand can be any code in python
+function ExecPythonCommand(pythonCommand, arg){
+    var request = new XMLHttpRequest()
+    request.open("GET", "/" + pythonCommand + "()", true)
+    request.send()
+}
+</script>
+
+<script>
+function check_user(){
+    var request = new XMLHttpRequest()
+    var user = document.getElementById("current_user").value
+    request.open("GET", "/user/" + user, true)
+    request.send()
+}
+</script>
+
 <input type="text"
        id="current_user"
        style="text-align: center"
        autofocus="autofocus"
        size="30"
        placeholder="... Name, Nick, initials, Pseudonym ..."
-       onkeydown="this.style.width = Math.max(((this.value.length + 1) * 8),30*8) + 'px'">
-<br>
+
+        onkeyup="this.style.width = Math.max(((this.value.length + 1) * 8),30*8) + 'px';
+        check_user()"
+>
 <br>
 
-<script>
-// pythonCommand can be any code in python
-function ExecPythonCommand(pythonCommand){
-    var request = new XMLHttpRequest()
-    var user = document.getElementById("current_user").value
-    request.open("GET", "/" + pythonCommand + "(" + user + ")", true)
-    request.send()
-}
-</script>
 <button type="button" onclick="ExecPythonCommand('update')">i'm a button</button>
 
 <br>
 <br>
-<br>
 
+<button type="button" id="fade_button"> Fade in </button>
 
-<div id="buttonContainer"></div>
-
+<div id="button-container">
+    <p>huhu</p>
     <script>
+        $('.button-container').hide();
+        setTimeout(function() {
+        $('#loader').hide();
+        $('.button-container').fadeIn('fast');
+            }, 5000);
+
         // Example array containing zeros, ones, and twos
         const array = [1, 1, 2, 1, 0, 2, 2, 0];
 
@@ -90,9 +114,9 @@ function ExecPythonCommand(pythonCommand){
             buttonContainer.appendChild(button);
         });
     </script>
+</div>
 
-    <div id="calendarContainer"></div>
-
+<div id="calendarContainer">
     <script>
         // Get the current date
         const today = new Date();
@@ -142,5 +166,6 @@ function ExecPythonCommand(pythonCommand){
             calendarContainer.appendChild(weekRow);
         }
     </script>
+</div>
 </body>
 </html>
