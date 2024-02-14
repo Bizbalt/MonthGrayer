@@ -5,6 +5,15 @@ div {
   opacity: 100%;
 }
 
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #f1f1f1;
+  text-align: center;
+  padding: 10px;
+  opacity: 20%;
+}
 
 /*the fade animations*/
 
