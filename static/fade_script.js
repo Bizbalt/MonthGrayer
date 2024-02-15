@@ -23,8 +23,11 @@ function fade() {
   }
 }
 function auto_fade_in(container) {
-  //get the div
-  //let footer = document.getElementById("footer");
   //triggers animation
-  container.style.animation = "fade-in 2s forwards";
+  container.style.animation = "fade-in 1s forwards";
+}
+
+function auto_fade_out(container) {
+  //triggers animation
+  container.style.animation = "fade-out 1s forwards";
 }

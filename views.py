@@ -1,8 +1,15 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, send_from_directory
 from MonthGreyer import MonthGreyer
+import os
 views = Blueprint(__name__, "views")
 
 user = "none"
+
+
+@views.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(views.root_path, 'static'),
+                               'favicon_dark.ico')
 
 
 @views.route("/")
@@ -46,7 +53,7 @@ def command(username=None):
     if username in users:
         month_greyer = MonthGreyer(username)
     else:
-        return ("none")
+        return "no user found"
 
     # if user exists, load his data
     if request.method == "POST":

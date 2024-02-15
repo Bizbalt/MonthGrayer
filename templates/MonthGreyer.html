@@ -3,6 +3,16 @@
 <head>
     <title>Colored Buttons</title>
     <style>
+        button {
+            background-color: #396ea2;
+            margin: 5px;
+            padding: 8px 16px;
+            border: #697177 3px solid;
+            border-radius: 4px;
+            color: #000000;
+            font-weight: bold;
+            cursor: pointer;
+        }
         .button {
             background-color: #3d4d5d;
             margin: 5px;
@@ -31,20 +41,14 @@
             font-family: "Arial Black", serif;
         }
 
-        /* Initial state of the containers to fade in */
-        .button-container {
-            display: none;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
+
+
     </style>
+    <link href="../static/style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body style="background: #2b2b2c; text-align: center">
-<h1 style>
-    Month Grayer
-</h1>
-<br>
+
 <script>
 // pythonCommand can be any code in python
 function ExecPythonCommand(pythonCommand, arg){
@@ -54,14 +58,33 @@ function ExecPythonCommand(pythonCommand, arg){
 }
 </script>
 
+<script type="text/javascript" src="../static/fade_script.js"></script>
 <script>
 function check_user(){
     var request = new XMLHttpRequest()
     var user = document.getElementById("current_user").value
     request.open("GET", "/user/" + user, true)
     request.send()
+    // get and print the response
+
+    request.onload = function() {
+        var response = request.responseText
+            // fade in calendarContainer if user is not none
+        if (response === "no user found"){
+            auto_fade_out(document.getElementById("calendarContainer"))
+        }
+        else {
+        console.log(response + " is the current user.")
+            //  ToDo: compute the view and then fade in
+            auto_fade_in(document.getElementById("calendarContainer"))
+        }
+    }
 }
 </script>
+
+<h1 style>
+    Month Grayer
+</h1>
 
 <input type="text"
        id="current_user"
@@ -73,50 +96,51 @@ function check_user(){
         onkeyup="this.style.width = Math.max(((this.value.length + 1) * 8),30*8) + 'px';
         check_user()"
 >
-<br>
-
-<button type="button" onclick="ExecPythonCommand('update')">i'm a button</button>
 
 <br>
+
+<button type="button" onclick="ExecPythonCommand('update')">I'm a beautifully designed button</button>
+
 <br>
 
-<button type="button" id="fade_button"> Fade in </button>
 
+<!--
 <div id="button-container">
-    <p>huhu</p>
-    <script>
-        $('.button-container').hide();
-        setTimeout(function() {
-        $('#loader').hide();
-        $('.button-container').fadeIn('fast');
-            }, 5000);
+<p>huhu</p>
+<script>
+    ('.button-container').hide();
+    setTimeout(function() {
+    ('#loader').hide();
+    ('.button-container').fadeIn('fast');
+        }, 5000);
 
-        // Example array containing zeros, ones, and twos
-        const array = [1, 1, 2, 1, 0, 2, 2, 0];
+    // Example array containing zeros, ones, and twos
+    const array = [1, 1, 2, 1, 0, 2, 2, 0];
 
-        const buttonContainer = document.getElementById('buttonContainer');
+    const buttonContainer = document.getElementById('buttonContainer');
 
-        // Iterate through the array and create buttons based on the values
-        array.forEach(value => {
-            const button = document.createElement('button');
-            button.textContent = value;
+    // Iterate through the array and create buttons based on the values
+    array.forEach(value => {
+        const button = document.createElement('button');
+        button.textContent = value;
 
-            // Apply appropriate class based on the value to set the color
-            if (value === 0) {
-                button.classList.add('grey');
-            } else if (value === 1) {
-                button.classList.add('green');
-            } else if (value === 2) {
-                button.classList.add('orange');
-            }
+        // Apply appropriate class based on the value to set the color
+        if (value === 0) {
+            button.classList.add('grey');
+        } else if (value === 1) {
+            button.classList.add('green');
+        } else if (value === 2) {
+            button.classList.add('orange');
+        }
 
-            button.classList.add('button');
-            buttonContainer.appendChild(button);
-        });
-    </script>
+        button.classList.add('button');
+        buttonContainer.appendChild(button);
+    });
+</script>
 </div>
+-->
 
-<div id="calendarContainer">
+<fade_div id="calendarContainer" >
     <script>
         // Get the current date
         const today = new Date();
@@ -166,6 +190,8 @@ function check_user(){
             calendarContainer.appendChild(weekRow);
         }
     </script>
-</div>
+</fade_div>
+
+
 </body>
 </html>

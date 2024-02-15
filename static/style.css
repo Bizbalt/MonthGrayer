@@ -1,10 +1,3 @@
-div {
-  width: 30vw;
-  height: 30vh;
-  background-color: blue;
-  opacity: 100%;
-}
-
 footer {
   position: fixed;
   bottom: 0;
@@ -13,6 +6,11 @@ footer {
   text-align: center;
   padding: 10px;
   opacity: 20%;
+}
+
+/* Initial state of the containers to fade in */
+fade_div {
+    opacity: 20;
 }
 
 /*the fade animations*/
