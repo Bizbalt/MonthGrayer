@@ -60,20 +60,27 @@ function ExecPythonCommand(pythonCommand, arg){
 
 <script type="text/javascript" src="../static/fade_script.js"></script>
 <script>
+let current_user = "" // global variable to refrain from loading the same user again
 function check_user(){
-    var request = new XMLHttpRequest()
-    var user = document.getElementById("current_user").value
+    const user = document.getElementById("current_user").value
+    if (user === current_user){ // refrain from loading the same user again
+        return}
+    if (user === ""){ // catch empty input
+        auto_fade_out(document.getElementById("calendarContainer"))
+        return}
+    const request = new XMLHttpRequest()
     request.open("GET", "/user/" + user, true)
     request.send()
     // get and print the response
 
     request.onload = function() {
-        var response = request.responseText
+        const response = request.responseText
             // fade in calendarContainer if user is not none
-        if (response === "no user found"){
+        if (response === "no user found" || response === ""){
             auto_fade_out(document.getElementById("calendarContainer"))
         }
         else {
+        current_user = user
         console.log(response + " is the current user.")
             //  ToDo: compute the view and then fade in
             auto_fade_in(document.getElementById("calendarContainer"))
@@ -140,7 +147,11 @@ function check_user(){
 </div>
 -->
 
-<fade_div id="calendarContainer" >
+<fade_div class="fade_div" id="calendarContainer" >
+    <style> {
+        opacity: 20;
+    }
+    </style>
     <script>
         // Get the current date
         const today = new Date();
