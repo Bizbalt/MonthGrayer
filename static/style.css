@@ -10,7 +10,7 @@ footer {
 
 /* Initial state of the containers to fade in */
 fade_div {
-    opacity: 20;
+    opacity: 0%;
 }
 
 /*the fade animations*/
