@@ -8,18 +8,12 @@ user = "none"
 
 @views.route('/favicon.ico')
 def favicon():
-    return send_from_directory(os.path.join(views.root_path, 'static'),
-                               'favicon_dark.ico')
+    return send_from_directory(os.path.join(views.root_path, 'static'), 'favicon_dark.ico')
 
 
 @views.route("/")
 def home():
     return render_template("index.html", value_to_pass="some random value")
-
-
-@views.route("/about/<page_number>")
-def about(page_number):
-    return render_template("index.html", value_to_pass="This is number {} of the the about pages.".format(page_number))
 
 
 @views.route("/cal")
