@@ -3,16 +3,7 @@
 <head>
     <title>Colored Buttons</title>
     <style>
-        button {
-            background-color: #396ea2;
-            margin: 5px;
-            padding: 8px 16px;
-            border: #697177 3px solid;
-            border-radius: 4px;
-            color: #000000;
-            font-weight: bold;
-            cursor: pointer;
-        }
+
         .button {
             background-color: #3d4d5d;
             margin: 5px;
@@ -35,11 +26,6 @@
         .dark_grey {
             background-color: #545454;
         }
-        h1 {
-            font-size: 50px;
-            color: white;
-            font-family: "Arial Black", serif;
-        }
 
 
 
@@ -47,7 +33,7 @@
     <link href="../static/style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body style="background: #2b2b2c; text-align: center">
+<body>
 
 <script>
 // pythonCommand can be any code in python
@@ -92,7 +78,6 @@ function check_user(){
         else {
         btn.style.display = "none";
         current_user = user
-        console.log(response + " is the current user.")
             //  ToDo: compute the view and then fade in
             auto_fade_in(document.getElementById("calendarContainer"))
         }
@@ -127,9 +112,7 @@ async function offer_new_user() {
 >
 
 <br>
-
-<button type="button" id="create_user" onclick="ExecPythonCommand('update')"> I'm a beautifully designed button </button>
-
+<button type="button" id="create_user" onclick="ExecPythonCommand('update')" style="display: none">I shouldn't be visible.</button>
 <br>
 
 
@@ -168,6 +151,63 @@ async function offer_new_user() {
 </script>
 </div>
 -->
+
+<table id="calendar_table">
+    <tr>
+        <th>Sun</th>
+        <th>Mon</th>
+        <th>Tue</th>
+        <th>Wed</th>
+        <th>Thu</th>
+        <th>Fri</th>
+        <th>Sat</th>
+    </tr>
+    <tr>
+        <td><button>hoi </button></td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>9</td>
+        <td>10</td>
+        <td>11</td>
+        <td>12</td>
+        <td>13</td>
+        <td>14</td>
+    </tr>
+    <tr>
+        <td>15</td>
+        <td>16</td>
+        <td>17</td>
+        <td>18</td>
+        <td>19</td>
+        <td>20</td>
+        <td>21</td>
+    </tr>
+    <tr>
+        <td>22</td>
+        <td>23</td>
+        <td>24</td>
+        <td>25</td>
+        <td>26</td>
+        <td>27</td>
+        <td>28</td>
+    </tr>
+    <tr>
+        <td>29</td>
+        <td>30</td>
+        <td>31</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
 
 <fade_div class="fade_div" id="calendarContainer" >
     <style> {
