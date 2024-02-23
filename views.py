@@ -11,9 +11,15 @@ def favicon():
     return send_from_directory(os.path.join(views.root_path, 'static'), 'favicon_dark.ico')
 
 
+#some random dictionary for testing
+all_data = {"start_day":"2024-02-18",
+            "day_array":[0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
+            "user_access_array":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0]}
+
+
 @views.route("/")
 def home():
-    return render_template("index.html", value_to_pass="some random value")
+    return render_template("index.html", value_to_pass="some random value", day_data=all_data)
 
 
 @views.route("/cal")
@@ -38,7 +44,7 @@ def intro_page():
     return render_template("MonthGreyer.html")
 
 
-@views.route('/user/<username>')
+@views.route('/user/<string:username>')
 def command(username=None):
 
     # checking for existing user - might not exist yet
