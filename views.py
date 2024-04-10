@@ -44,28 +44,19 @@ def intro_page():
     return render_template("MonthGreyer.html")
 
 
+@views.route("/grey_day/<string:username>/<string:day>")
+def grey_day(username, day):
+    calendar_data = MonthGreyer(username)
+    calendar_data.grey_day(day)
+    return jsonify(True)
+
 @views.route('/user/<string:username>')
 def command(username=None):
-
     # checking for existing user - might not exist yet
     users = open("users.txt").read().splitlines()
 
-    if username in users:
-        month_greyer = MonthGreyer(username)
-    else:
+    if not username in users:
         return "no user found"
-
-    # if user exists, load his data
-    if request.method == "POST":
-        if request.form["current_user"] in users:
-            pass
-    # else create new user
-    calendar_data = MonthGreyer(user)
-    print(username)
-
+    
+    calendar_data = MonthGreyer(username)
     return jsonify(calendar_data.get_markings())
-
-
-@views.route("/button_fade")
-def button_fade():
-    return render_template("button_fade.html")

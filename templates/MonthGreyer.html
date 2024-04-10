@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Colored Buttons</title>
     <style>
-
         .button {
             background-color: #3d4d5d;
             margin: 5px;
@@ -14,208 +14,149 @@
             font-weight: bold;
             cursor: pointer;
         }
+
+        tr {
+            text-align: center;
+            height: 50px;
+        }
+
+        th {
+            cursor: pointer;
+            width: 14.28%;
+        }
+
+        #calendar_table {
+            width: 80%;
+            max-width: 800px;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        #month_year {
+            color: white;
+        }
+
         .grey {
             background-color: grey;
         }
+
         .green {
             background-color: green;
         }
+
         .orange {
             background-color: orange;
         }
+
         .dark_grey {
             background-color: #545454;
         }
-
-
-
     </style>
+
+    <script>
+        // pythonCommand can be any code in python
+        function ExecPythonCommand(pythonCommand, arg) {
+            var request = new XMLHttpRequest()
+            request.open("GET", "/" + pythonCommand + "()", true)
+            request.send()
+        }
+
+        async function mark_day(td) {
+            const classes = td.getAttribute("class")
+            switch (classes) {
+                case "grey":
+                    td.setAttribute("class", "green");
+                    break;
+                case "green":
+                    td.setAttribute("class", "green");
+                    const day = td.innerText
+                    const success = await fetch(`/grey_day/bob/${day}`, { // todo: get user
+                        method: "GET",
+                    })
+
+                    if (success) {
+                        td.setAttribute("class", "grey");
+                    }
+                    break;
+                case "orange":
+                    td.setAttribute("class", "dark_grey");
+                    break;
+                case "dark_grey":
+                    td.setAttribute("class", "grey");
+                    break;
+                default:
+                    td.setAttribute("class", "grey");
+                    break;
+            }
+
+        }
+
+        async function init() {
+            // generate the calendar
+            const calendar = document.getElementById("calendar_table")
+            const date = new Date()
+            const month = date.getMonth()
+            const year = date.getFullYear()
+            const weekdayOf1st = new Date(year, month, 1).getDay() // 0 = Sunday, 6 = Saturday
+            const emptyFields = (weekdayOf1st - 1) % 7 // 0 = Monday, 6 = Sunday
+            const daysInMonth = new Date(year, month + 1, 0).getDate()
+            const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+            const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"]
+
+            const h3 = document.getElementById("month_year")
+            h3.innerText = `${months[month]} ${year}`
+
+            // create the header
+            let tr = document.createElement("tr")
+            calendar.appendChild(tr)
+            for (let i = 0; i < 7; i++) {
+                let th = document.createElement("th")
+                th.innerText = weekdays[i]
+                tr.appendChild(th)
+            }
+
+            // create the days
+            for (let i = 0; i < daysInMonth + emptyFields; i++) {
+                if (i % 7 == 0) {
+                    tr = document.createElement("tr")
+                    calendar.appendChild(tr)
+                }
+                const th = document.createElement("td")
+                tr.appendChild(th)
+                if (i < emptyFields) {
+                    th.innerText = ""
+                } else {
+                    th.innerText = i - emptyFields + 1
+                    th.setAttribute("class", "green") // todo: get from server
+                    th.setAttribute("onclick", "mark_day(this)")
+                }
+            }
+        }
+    </script>
+
+    <script type="text/javascript" src="../static/fade_script.js"></script>
+    <script type="text/javascript" src="../static/user_check.js"></script>
     <link href="../static/style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body>
+<body onload="init()">
+    <h1 style>
+        Month Grayer
+    </h1>
 
-<script>
-// pythonCommand can be any code in python
-function ExecPythonCommand(pythonCommand, arg){
-    var request = new XMLHttpRequest()
-    request.open("GET", "/" + pythonCommand + "()", true)
-    request.send()
-}
-</script>
+    <input type="text" id="current_user" style="text-align: center" autofocus="autofocus" size="30"
+        placeholder="... Name, Nick, initials, Pseudonym ..." onkeyup="this.style.width = Math.max(((this.value.length + 1) * 8),30*8) + 'px';
+        check_user()">
 
-<script type="text/javascript" src="../static/fade_script.js"></script>
-<script type="text/javascript" src="../static/user_check.js"></script>
+    <br>
+    <button type="button" id="create_user" onclick="ExecPythonCommand('update')" style="display: none">I shouldn't be
+        visible.</button>
+    <br>
 
-<h1 style>
-    Month Grayer
-</h1>
-
-<input type="text"
-       id="current_user"
-       style="text-align: center"
-       autofocus="autofocus"
-       size="30"
-       placeholder="... Name, Nick, initials, Pseudonym ..."
-
-        onkeyup="this.style.width = Math.max(((this.value.length + 1) * 8),30*8) + 'px';
-        check_user()"
->
-
-<br>
-<button type="button" id="create_user" onclick="ExecPythonCommand('update')" style="display: none">I shouldn't be visible.</button>
-<br>
-
-
-<!--
-<div id="button-container">
-<p>huhu</p>
-<script>
-    ('.button-container').hide();
-    setTimeout(function() {
-    ('#loader').hide();
-    ('.button-container').fadeIn('fast');
-        }, 5000);
-
-    // Example array containing zeros, ones, and twos
-    const array = [1, 1, 2, 1, 0, 2, 2, 0];
-
-    const buttonContainer = document.getElementById('buttonContainer');
-
-    // Iterate through the array and create buttons based on the values
-    array.forEach(value => {
-        const button = document.createElement('button');
-        button.textContent = value;
-
-        // Apply appropriate class based on the value to set the color
-        if (value === 0) {
-            button.classList.add('grey');
-        } else if (value === 1) {
-            button.classList.add('green');
-        } else if (value === 2) {
-            button.classList.add('orange');
-        }
-
-        button.classList.add('button');
-        buttonContainer.appendChild(button);
-    });
-</script>
-</div>
--->
-
-<table id="calendar_table">
-    <tr>
-        <th>Sun</th>
-        <th>Mon</th>
-        <th>Tue</th>
-        <th>Wed</th>
-        <th>Thu</th>
-        <th>Fri</th>
-        <th>Sat</th>
-    </tr>
-    <tr>
-        <td><button>hoi </button></td>
-        <td>2</td>
-        <td>3</td>
-        <td>4</td>
-        <td>5</td>
-        <td>6</td>
-        <td>7</td>
-    </tr>
-    <tr>
-        <td>8</td>
-        <td>9</td>
-        <td>10</td>
-        <td>11</td>
-        <td>12</td>
-        <td>13</td>
-        <td>14</td>
-    </tr>
-    <tr>
-        <td>15</td>
-        <td>16</td>
-        <td>17</td>
-        <td>18</td>
-        <td>19</td>
-        <td>20</td>
-        <td>21</td>
-    </tr>
-    <tr>
-        <td>22</td>
-        <td>23</td>
-        <td>24</td>
-        <td>25</td>
-        <td>26</td>
-        <td>27</td>
-        <td>28</td>
-    </tr>
-    <tr>
-        <td>29</td>
-        <td>30</td>
-        <td>31</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-</table>
-
-<fade_div class="fade_div" id="calendarContainer" >
-    <style> {
-        opacity: 20;
-    }
-    </style>
-    <script>
-        // Get the current date
-        const today = new Date();
-
-        // Get the year and month (January is 0, December is 11)
-        const year = today.getFullYear();
-        const month = today.getMonth();
-
-        // Get the first day and total days in the month
-        const firstDay = new Date(year, month, 1).getDay(); // Sunday is 0, Monday is 1, ...
-        const totalDays = new Date(year, month + 1, 0).getDate(); // Number of days in the month
-
-        const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-        const calendarContainer = document.getElementById('calendarContainer');
-
-        // Create header row with weekday names
-        const headerRow = document.createElement('div');
-        headerRow.classList.add('row');
-        weekdays.forEach(day => {
-            const cell = document.createElement('div');
-            cell.textContent = day;
-            headerRow.appendChild(cell);
-        });
-        calendarContainer.appendChild(headerRow);
-
-        // Create rows for each week
-        let dayCounter = 1;
-        for (let i = 0; i < 6; i++) { // Assuming maximum 6 weeks in a month
-            const weekRow = document.createElement('div');
-            weekRow.classList.add('row');
-
-            for (let j = 0; j < 7; j++) { // Seven days in a week
-                const cell = document.createElement('button');
-                cell.classList.add('button');
-
-                if ((i === 0 && j < firstDay) || dayCounter > totalDays) {
-                    cell.textContent = '';
-                } else {
-                    cell.textContent = dayCounter;
-                    dayCounter++;
-                }
-
-                weekRow.appendChild(cell);
-            }
-
-            calendarContainer.appendChild(weekRow);
-        }
-    </script>
-</fade_div>
-
+    <h2 id="month_year" style="text-align: center; font-size: 40px;"></h2>
+    <table id="calendar_table">
+    </table>
 
 </body>
+
 </html>
