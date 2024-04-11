@@ -20,9 +20,10 @@
             height: 50px;
         }
 
-        th {
+        td {
             cursor: pointer;
             width: 14.28%;
+            user-select: none;
         }
 
         #calendar_table {
@@ -54,39 +55,41 @@
     </style>
 
     <script>
+        COLOR = {
+            "grey": "grey",
+            "green": "green",
+            "orange": "orange",
+            "dark_grey": "dark_grey",
+        }
+        url = this.location.origin + "/"
         // pythonCommand can be any code in python
         function ExecPythonCommand(pythonCommand, arg) {
             var request = new XMLHttpRequest()
-            request.open("GET", "/" + pythonCommand + "()", true)
+            request.open("GET", url + pythonCommand + "()", true)
             request.send()
         }
 
         async function mark_day(td) {
             const classes = td.getAttribute("class")
+            const day = td.innerText
+            let success = false
             switch (classes) {
                 case "grey":
-                    td.setAttribute("class", "green");
-                    break;
-                case "green":
-                    td.setAttribute("class", "green");
-                    const day = td.innerText
-                    const success = await fetch(`/grey_day/bob/${day}`, { // todo: get user
-                        method: "GET",
-                    })
-
+                    success = await (await fetch(url + `free_day/${current_user}/${day}`)).text() === "True"
                     if (success) {
-                        td.setAttribute("class", "grey");
+                        td.setAttribute("class", COLOR.orange);
                     }
-                    break;
+                    return;
+                case "green":
                 case "orange":
-                    td.setAttribute("class", "dark_grey");
-                    break;
-                case "dark_grey":
-                    td.setAttribute("class", "grey");
-                    break;
+                    success = Boolean(await (await fetch(url + `grey_day/${current_user}/${day}`)).text()) === "True"
+                    if (success) {
+                        td.setAttribute("class", COLOR.grey);
+                    }
+                    return;
                 default:
-                    td.setAttribute("class", "grey");
-                    break;
+                    console.log("Can't mark day " + day)
+                    return;
             }
 
         }
@@ -95,7 +98,7 @@
             // generate the calendar
             const calendar = document.getElementById("calendar_table")
             const date = new Date()
-            const month = date.getMonth()
+            const month = date.getMonth() // 0 = Jan, 11 = Dec
             const year = date.getFullYear()
             const weekdayOf1st = new Date(year, month, 1).getDay() // 0 = Sunday, 6 = Saturday
             const emptyFields = (weekdayOf1st - 1) % 7 // 0 = Monday, 6 = Sunday
@@ -103,6 +106,7 @@
             const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
             const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"]
 
+            // headline
             const h3 = document.getElementById("month_year")
             h3.innerText = `${months[month]} ${year}`
 
@@ -115,20 +119,71 @@
                 tr.appendChild(th)
             }
 
-            // create the days
+            // create the days (empty fields in the beginning to match weekdays)
             for (let i = 0; i < daysInMonth + emptyFields; i++) {
                 if (i % 7 == 0) {
                     tr = document.createElement("tr")
                     calendar.appendChild(tr)
                 }
-                const th = document.createElement("td")
-                tr.appendChild(th)
+                const td = document.createElement("td")
+                tr.appendChild(td)
                 if (i < emptyFields) {
-                    th.innerText = ""
+                    td.innerText = ""
                 } else {
-                    th.innerText = i - emptyFields + 1
-                    th.setAttribute("class", "green") // todo: get from server
-                    th.setAttribute("onclick", "mark_day(this)")
+                    td.innerText = i - emptyFields + 1
+                    td.setAttribute("class", COLOR.dark_grey)
+                    td.setAttribute("onclick", "mark_day(this)")
+                }
+            }
+        }
+
+        // to get width of the input, create a new span element and measure its width
+        function getWidthOfInput(event) {
+            input = document.getElementById("current_user")
+
+            // generate span
+            const tmp = document.createElement("span")
+            tmp.style.font = input.style.font
+            tmp.style.visibility = "hidden"
+            tmp.style.fontSize = input.style.fontSize
+            tmp.style.whiteSpace = "pre"
+            tmp.innerText = input.value
+
+            if (event.key.length === 1) { // if visible character
+                tmp.innerText = tmp.innerText + event.key
+            } else if (event.keyCode === 8) { // if backspace (edge case: backspace on left end)
+                tmp.innerText = tmp.innerText.slice(0, -1) // remove last char
+            }
+            document.body.appendChild(tmp)
+
+            // measure width
+            const width = tmp.scrollWidth
+
+            // remove span again
+            document.body.removeChild(tmp)
+
+            // add buffer to not look cramped, also minimum width
+            return Math.max(width + 40, 200)
+        }
+
+        function fillTable() {
+            //todo: get current free (green) self greyed out (grey) freed again (orange) and greyed out by others (dark_grey) days
+
+            //todo: expects above as array of COLOR
+            const days = [COLOR.grey, COLOR.grey, COLOR.green, COLOR.green, COLOR.green,
+            COLOR.green, COLOR.dark_grey, COLOR.dark_grey, COLOR.dark_grey, COLOR.dark_grey,
+            COLOR.grey, COLOR.grey, COLOR.green, COLOR.green, COLOR.green,
+            COLOR.green, COLOR.dark_grey, COLOR.dark_grey, COLOR.dark_grey, COLOR.dark_grey,
+            COLOR.grey, COLOR.grey, COLOR.green, COLOR.green, COLOR.green,
+            COLOR.orange, COLOR.orange, COLOR.orange, COLOR.orange, COLOR.orange, COLOR.orange]
+
+            const calendar = document.getElementById("calendar_table")
+            for (tr of calendar.children) {
+                for (td of tr.children) {
+                    const day = td.innerText
+                    if (day != null) {
+                        td.setAttribute("class", days[day - 1]) // -1 because days start at 1, array at 0
+                    }
                 }
             }
         }
@@ -144,9 +199,9 @@
         Month Grayer
     </h1>
 
-    <input type="text" id="current_user" style="text-align: center" autofocus="autofocus" size="30"
-        placeholder="... Name, Nick, initials, Pseudonym ..." onkeyup="this.style.width = Math.max(((this.value.length + 1) * 8),30*8) + 'px';
-        check_user()">
+    <input type="text" id="current_user" style="text-align: center; font-size: 16px;" autofocus="autofocus"
+        placeholder="... Name, Nick, initials, Pseudonym ..."
+        onkeydown="this.style.width = getWidthOfInput(event) + 'px'" onkeyup="check_user()">
 
     <br>
     <button type="button" id="create_user" onclick="ExecPythonCommand('update')" style="display: none">I shouldn't be

@@ -1,38 +1,36 @@
 let current_user = "" // global variable to refrain from loading the same user again
 let create_user_opportunity = -1
-function check_user(){
+async function check_user() {
     let btn = document.getElementById("create_user");
     create_user_opportunity = -1
     const user = document.getElementById("current_user").value
-    if (user === current_user){ // refrain from loading the same user again
+    if (user === current_user) { // refrain from loading the same user again
         btn.style.display = "none";
-        return}
-    if (user === ""){ // catch empty input
+        return
+    }
+    if (user === "") { // catch empty input
         auto_fade_out(document.getElementById("calendarContainer"))
-        return}
-    const request = new XMLHttpRequest()
-    request.open("GET", "/user/" + user, true)
-    request.send()
-    // get and print the response
+        return
+    }
+    const response = await fetch(url + `/user/${user}`)
 
-    request.onload = function() {
-        const response = request.responseText
-        btn.innerHTML = "Create new user " + user + "?";
-            // fade in calendarContainer if user is not none
-        if (response === "no user found" || response === ""){
-            auto_fade_out(document.getElementById("calendarContainer"))
-            if (response === "no user found"){
-                current_user = ""
-                create_user_opportunity = 3
-                offer_new_user(user)
-            }
+    const responseText = await response.text()
+    btn.innerHTML = "Create new user " + user + "?";
+    // fade in calendarContainer if user is not none
+    if (responseText === "no user found" || responseText === "") {
+        auto_fade_out(document.getElementById("calendarContainer"))
+        if (responseText === "no user found") {
+            current_user = ""
+            create_user_opportunity = 3
+            offer_new_user(user)
         }
-        else {
+    }
+    else {
         btn.style.display = "none";
         current_user = user
-            //  ToDo: compute the view and then fade in
-            auto_fade_in(document.getElementById("calendarContainer"))
-        }
+        fillTable()
+        //  ToDo: compute the view and then fade in
+        // auto_fade_in(document.getElementById("calendarContainer"))
     }
 }
 

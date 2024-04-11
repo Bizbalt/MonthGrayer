@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, send_from_directory
+from flask import Blueprint, render_template, request, jsonify, send_from_directory, redirect
 from MonthGreyer import MonthGreyer
 import os
 views = Blueprint(__name__, "views")
@@ -19,7 +19,8 @@ all_data = {"start_day":"2024-02-18",
 
 @views.route("/")
 def home():
-    return render_template("index.html", value_to_pass="some random value", day_data=all_data)
+    # return render_template("index.html", value_to_pass="some random value", day_data=all_data)
+    return redirect("/MonthGreyer")
 
 
 @views.route("/cal")
@@ -47,8 +48,14 @@ def intro_page():
 @views.route("/grey_day/<string:username>/<string:day>")
 def grey_day(username, day):
     calendar_data = MonthGreyer(username)
-    calendar_data.grey_day(day)
-    return jsonify(True)
+    success = calendar_data.grey_day(day)
+    return str(success)
+
+@views.route("/free_day/<string:username>/<string:day>")
+def free_day(username, day):
+    calendar_data = MonthGreyer(username)
+    success = calendar_data.free_day(day)
+    return str(success)
 
 @views.route('/user/<string:username>')
 def command(username=None):

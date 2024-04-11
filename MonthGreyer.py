@@ -87,13 +87,22 @@ class MonthGreyer:
                                                            ) + self.user
 
     def grey_day(self, day: datetime.date):
-        self.markings[day] = "grayed"
+        if day in self.markings:
+            if self.markings[day] == "freed":
+                self.markings[day] = "grayed"
+                return True
+            else:
+                flash(day)
+                return False
+        return False
 
     def free_day(self, day: datetime.date):
         if day in self.markings and self.markings[day] == "grayed":
             self.markings[day] = "freed"
+            return True
         else:
             flash(day)
+            return False
 
     def get_markings(self):
         return self.markings
