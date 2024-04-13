@@ -9,7 +9,7 @@ async function check_user() {
         return
     }
     if (user === "") { // catch empty input
-        auto_fade_out(document.getElementById("calendar_table"))
+        auto_fade_out(document.getElementById("calendarContainer"))
         return
     }
     const response = await fetch(url + `/user/${user}`)
@@ -18,7 +18,7 @@ async function check_user() {
     btn.innerHTML = "Create new user " + user + "?";
     // fade in calendarContainer if user is not none
     if (responseText === "no user found" || responseText === "") {
-        auto_fade_out(document.getElementById("calendar_table"))
+        auto_fade_out(document.getElementById("calendarContainer"))
         if (responseText === "no user found") {
             current_user = ""
             create_user_opportunity = 3
@@ -30,7 +30,7 @@ async function check_user() {
         current_user = user
         fillTable()
         //  ToDo: compute the view and then fade in
-        auto_fade_in(document.getElementById("calendar_table"))
+        auto_fade_in(document.getElementById("calendarContainer"))
     }
 }
 
