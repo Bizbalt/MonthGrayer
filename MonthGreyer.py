@@ -87,13 +87,22 @@ class MonthGreyer:
                                                            ) + self.user
 
     def grey_day(self, day: datetime.date):
-        self.markings[day] = "grayed"
+        if day in self.markings:
+            if self.markings[day] == "freed":
+                self.markings[day] = "grayed"
+                return True
+            else:
+                flash(day)
+                return False
+        return False
 
     def free_day(self, day: datetime.date):
         if day in self.markings and self.markings[day] == "grayed":
             self.markings[day] = "freed"
+            return True
         else:
             flash(day)
+            return False
 
     def get_markings(self):
         return self.markings
@@ -105,15 +114,3 @@ def date_range(start, end):
     delta = end_date - start_date
     days = [start_date + timedelta(days=i) for i in range(delta.days + 1)]
     return days
-
-
-# print(date_range("2023-12-28", "2024-01-20"))
-#
-# # testing:
-# my_month = MonthGreyer("Nex")
-# print(my_month)
-# my_month.grey_day(1)
-# my_month.grey_day(3)
-# my_month.free_day(1)
-# my_month.free_day(2)
-# print(my_month.get_markings())

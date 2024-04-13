@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, send_from_directory
+from flask import Blueprint, render_template, request, jsonify, send_from_directory, redirect
 from MonthGreyer import MonthGreyer
 import os
 views = Blueprint(__name__, "views")
@@ -19,7 +19,8 @@ all_data = {"start_day":"2024-02-18",
 
 @views.route("/")
 def home():
-    return render_template("index.html", value_to_pass="some random value", day_data=all_data)
+    # return render_template("index.html", value_to_pass="some random value", day_data=all_data)
+    return redirect("/MonthGreyer")
 
 
 @views.route("/cal")
@@ -44,28 +45,25 @@ def intro_page():
     return render_template("MonthGreyer.html")
 
 
+@views.route("/grey_day/<string:username>/<string:day>")
+def grey_day(username, day):
+    calendar_data = MonthGreyer(username)
+    success = calendar_data.grey_day(day)
+    return str(success)
+
+@views.route("/free_day/<string:username>/<string:day>")
+def free_day(username, day):
+    calendar_data = MonthGreyer(username)
+    success = calendar_data.free_day(day)
+    return str(success)
+
 @views.route('/user/<string:username>')
 def command(username=None):
-
     # checking for existing user - might not exist yet
     users = open("users.txt").read().splitlines()
 
-    if username in users:
-        month_greyer = MonthGreyer(username)
-    else:
+    if not username in users:
         return "no user found"
-
-    # if user exists, load his data
-    if request.method == "POST":
-        if request.form["current_user"] in users:
-            pass
-    # else create new user
-    calendar_data = MonthGreyer(user)
-    print(username)
-
+    
+    calendar_data = MonthGreyer(username)
     return jsonify(calendar_data.get_markings())
-
-
-@views.route("/button_fade")
-def button_fade():
-    return render_template("button_fade.html")

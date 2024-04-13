@@ -27,16 +27,16 @@ var auto_fade_state = true; // default is faded
 
 function auto_fade_in(container) {
   if (auto_fade_state === true) {
-  //triggers animation
-  container.style.animation = "fade-in 1s forwards";
-  auto_fade_state = false;
+    //triggers animation
+    container.style.animation = "fade-in 1s forwards";
+    auto_fade_state = false;
   }
 }
 
 function auto_fade_out(container) {
   if (auto_fade_state === false) {
-  //triggers animation
-  container.style.animation = "fade-out 1s forwards";
-  auto_fade_state = true;
+    //triggers animation
+    container.style.animation = "fade-out 1s forwards";
+    auto_fade_state = true;
   }
 }
