@@ -200,7 +200,7 @@
     </h1>
 
     <input type="text" id="current_user" style="text-align: center; font-size: 16px;" autofocus="autofocus"
-        placeholder="... Name, Nick, initials, Pseudonym ..."
+        placeholder="... Name, Nick, Initials, Pseudonym ..."
         onkeydown="this.style.width = getWidthOfInput(event) + 'px'" onkeyup="check_user()">
 
     <br>
@@ -209,11 +209,17 @@
     <br>
 
 
-    <fade_div class="fade_div" id="calendarContainer" >
-    <style> {opacity: 20; } </style>
-    <h2 id="month_year" style="text-align: center; font-size: 40px;"></h2>
-    <table id="calendar_table" >
-    </table>
+    <fade_div class="fade_div" id="calendarContainer">
+        <style>
+            /* TODO: Remove, only for development */
+            /* all children of fade_div */
+            .fade_div>* {
+                opacity: 20;
+            }
+        </style>
+        <h2 id="month_year" style="text-align: center; font-size: 40px;"></h2>
+        <table id="calendar_table">
+        </table>
     </fade_div>
 
 </body>
