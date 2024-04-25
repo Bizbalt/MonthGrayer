@@ -30,7 +30,7 @@ button {
     cursor: pointer;
 }
 /* Initial state of the containers to fade in */
-fade_div {
+fade-div {
     opacity: 20%;
 }
 

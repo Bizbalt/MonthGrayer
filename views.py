@@ -3,8 +3,6 @@ from MonthGreyer import MonthGreyer
 import os
 views = Blueprint(__name__, "views")
 
-user = "none"
-
 
 @views.route('/favicon.ico')
 def favicon():
@@ -19,17 +17,7 @@ all_data = {"start_day":"2024-02-18",
 
 @views.route("/")
 def home():
-    # return render_template("index.html", value_to_pass="some random value", day_data=all_data)
     return redirect("/MonthGreyer")
-
-
-@views.route("/cal")
-def personal_message():
-    args = request.args  # send query with "/cal?msg=10"
-    msg = "Month chosen " + args.get("msg")
-    import calendar
-    msg2 = calendar.month(2023, int(args.get("msg")))
-    return render_template("index.html", value_to_pass=msg, another_value_to_pass=msg2)
 
 
 @views.route("/process_selected_option", methods=["GET"])

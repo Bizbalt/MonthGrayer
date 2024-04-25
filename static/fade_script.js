@@ -27,6 +27,8 @@ var auto_fade_state = true; // default is faded
 
 function auto_fade_in(container) {
   if (auto_fade_state === true) {
+    // display container with 0 opacity
+    container.style.display = "block";
     //triggers animation
     container.style.animation = "fade-in 1s forwards";
     auto_fade_state = false;
@@ -37,6 +39,10 @@ function auto_fade_out(container) {
   if (auto_fade_state === false) {
     //triggers animation
     container.style.animation = "fade-out 1s forwards";
+    // hide container after animation
+    setTimeout(function () {
+      container.style.display = "none";
+    }, 1000);
     auto_fade_state = true;
   }
 }
