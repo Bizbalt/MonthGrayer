@@ -31,7 +31,7 @@ button {
 }
 /* Initial state of the containers to fade in */
 fade-div {
-    opacity: 20%;
+    opacity: 20%; /* ToDo: set to 0% later. Yet the 20% are just for debugging reasons */
 }
 
 /*the fade animations*/
