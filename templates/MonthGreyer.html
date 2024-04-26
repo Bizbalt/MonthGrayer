@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Colored Buttons</title>
+    <title>Month Grayer</title>
     <style>
         .button {
             background-color: #3d4d5d;
@@ -55,12 +55,6 @@
     </style>
 
     <script>
-        COLOR = {
-            "grey": "grey",
-            "green": "green",
-            "orange": "orange",
-            "dark_grey": "dark_grey",
-        }
         url = this.location.origin + "/"
         // pythonCommand can be any code in python
         function ExecPythonCommand(pythonCommand, arg) {
@@ -104,7 +98,7 @@
             const emptyFields = (weekdayOf1st - 1) % 7 // 0 = Monday, 6 = Sunday
             const daysInMonth = new Date(year, month + 1, 0).getDate()
             const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-            const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"]
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
             // headline
             const h3 = document.getElementById("month_year")
@@ -167,9 +161,15 @@
         }
 
         function fillTable() {
-            //todo: get current free (green) self greyed out (grey) freed again (orange) and greyed out by others (dark_grey) days
+            //todo: get current free (green) self greyed out (grey) freed again (orange) and greyed out by others (dark_grey) days from user_check.js
 
             //todo: expects above as array of COLOR
+            COLOR = {
+            "grey": "grey",
+            "green": "green",
+            "orange": "orange",
+            "dark_grey": "dark_grey",
+        }
             const days = [COLOR.grey, COLOR.grey, COLOR.green, COLOR.green, COLOR.green,
             COLOR.green, COLOR.dark_grey, COLOR.dark_grey, COLOR.dark_grey, COLOR.dark_grey,
             COLOR.grey, COLOR.grey, COLOR.green, COLOR.green, COLOR.green,
@@ -189,6 +189,10 @@
         }
     </script>
 
+    <script>
+        // ToDo: autosave: The user dictionary is updated on every click, albeit the "finished vote" status is found when he closes the page or goes to another tab in his browser for a certain time (10 seconds?).
+
+    </script>
     <script type="text/javascript" src="../static/fade_script.js"></script>
     <script type="text/javascript" src="../static/user_check.js"></script>
     <link href="../static/style.css" rel="stylesheet" type="text/css" />

@@ -27,9 +27,9 @@ How do I display the calender via raspy on a website? ask Nialing maybe. Hopeful
  css. The Site should just update if somebody looks up the site or enters a new entry. The information could be saved
   file-wise per month on the raspy.
 
-I need a file format: array  for each day: 0-gray, "none"-green, 2 orange. Every days "number" should also have none or the
- respective changer so one can see what he changed only. So I actually need a fourth color 1-dark grey so the person
-  which grayed it can see that he can ungray it.
+I need a file format: array  for each day: 0-gray, "none"-green, 2 orange. Every days "number" should also have none or 
+ the respective changer so one can see what he changed only. So I actually need a fourth color 1-light_grey so the
+  person which grayed it can see that he can ungray it.
 Storing wise the greying of persons should be stored and if not applicable, the greying
  for the "group"-account. Then on load the overall greying should be computed out of those. 
 
@@ -38,6 +38,14 @@ Standard look should be dark, so I better go inspired by the Dracula theme with 
 
 the program should notice which day the last day was, everybody has seen, and then check if in the time from now to
  this specific last shared date any dates exist where everybody has time. 
+ 
+The automatic storage of votes on blur/close of the Tab should be done in the REST architectural style like adviced by 
+ Minutenreis.
+Alike the transfer of data from front-end to back-end and vice versa should be in the same fashion and flexible:
+    Only an arbitrary lenght (month-wise (30, 61, 91, ...)) of dates is sent, the starting point is always current time. 
+    A safety check would be that the expected lengths are the same 
+        (which would raise errors when the local time on one machine is different, the user reloaded an old instance
+         from cache from the day before or over midnight 23:59:59 -> 00:00:00)     
 '''
 
 
