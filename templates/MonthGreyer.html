@@ -56,11 +56,12 @@
 
     <script>
         url = this.location.origin + "/"
-        // pythonCommand can be any code in python
-        function ExecPythonCommand(pythonCommand, arg) {
-            var request = new XMLHttpRequest()
-            request.open("GET", url + pythonCommand + "()", true)
-            request.send()
+
+        COLOR = {
+            "grey": "grey",
+            "green": "green",
+            "orange": "orange",
+            "dark_grey": "dark_grey",
         }
 
         async function mark_day(td) {
@@ -82,10 +83,10 @@
                     }
                     return;
                 default:
+                    // ToDo: Flash that td (table data cell) if the action is not allowed
                     console.log("Can't mark day " + day)
                     return;
             }
-
         }
 
         async function init() {
@@ -115,7 +116,7 @@
 
             // create the days (empty fields in the beginning to match weekdays)
             for (let i = 0; i < daysInMonth + emptyFields; i++) {
-                if (i % 7 == 0) {
+                if (i % 7 === 0) {
                     tr = document.createElement("tr")
                     calendar.appendChild(tr)
                 }
@@ -129,47 +130,34 @@
                     td.setAttribute("onclick", "mark_day(this)")
                 }
             }
-        }
 
-        // to get width of the input, create a new span element and measure its width
-        function getWidthOfInput(event) {
-            input = document.getElementById("current_user")
-
-            // generate span
-            const tmp = document.createElement("span")
-            tmp.style.font = input.style.font
-            tmp.style.visibility = "hidden"
-            tmp.style.fontSize = input.style.fontSize
-            tmp.style.whiteSpace = "pre"
-            tmp.innerText = input.value
-
-            if (event.key.length === 1) { // if visible character
-                tmp.innerText = tmp.innerText + event.key
-            } else if (event.keyCode === 8) { // if backspace (edge case: backspace on left end)
-                tmp.innerText = tmp.innerText.slice(0, -1) // remove last char
+            // testing generation for multiple months
+            function currentDayRange(monthRange = 2) { // function gives out a range of dates for a range of months starting from today
+                let today = new Date();
+                let months = [];
+                for (let mon = 0; mon <= monthRange; mon++) {
+                    let newDate = new Date(today.getFullYear(), today.getMonth() + mon, 1);
+                    months.push(newDate);
+                }
+                let dates = [];
+                months.forEach(month => {
+                    let numDays = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
+                    for (let day = 1; day <= numDays; day++) {
+                        let newDay = new Date(month.getFullYear(), month.getMonth(), day);
+                        dates.push(newDay);
+                    }
+                });
+                return dates;
             }
-            document.body.appendChild(tmp)
+            console.log(currentDayRange().length);
 
-            // measure width
-            const width = tmp.scrollWidth
-
-            // remove span again
-            document.body.removeChild(tmp)
-
-            // add buffer to not look cramped, also minimum width
-            return Math.max(width + 40, 200)
         }
+
 
         function fillTable() {
             //todo: get current free (green) self greyed out (grey) freed again (orange) and greyed out by others (dark_grey) days from user_check.js
 
             //todo: expects above as array of COLOR
-            COLOR = {
-            "grey": "grey",
-            "green": "green",
-            "orange": "orange",
-            "dark_grey": "dark_grey",
-        }
             const days = [COLOR.grey, COLOR.grey, COLOR.green, COLOR.green, COLOR.green,
             COLOR.green, COLOR.dark_grey, COLOR.dark_grey, COLOR.dark_grey, COLOR.dark_grey,
             COLOR.grey, COLOR.grey, COLOR.green, COLOR.green, COLOR.green,
@@ -195,7 +183,9 @@
     </script>
     <script type="text/javascript" src="../static/fade_script.js"></script>
     <script type="text/javascript" src="../static/user_check.js"></script>
-    <link href="../static/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="../static/dynamic_input-box_width.js"></script>
+    <link href="../static/style.css" rel="stylesheet" type="text/css"/>
+
 </head>
 
 <body onload="init()">
@@ -208,7 +198,7 @@
         onkeydown="this.style.width = getWidthOfInput(event) + 'px'" onkeyup="check_user()">
 
     <br>
-    <button type="button" id="create_user" onclick="ExecPythonCommand('update')" style="display: none">I shouldn't be
+    <button type="button" id="create_user" onclick="create_user(current_user)" style="display: none">I shouldn't be
         visible.</button>
     <br>
 

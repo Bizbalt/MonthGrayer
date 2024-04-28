@@ -1,13 +1,10 @@
 import calendar
 from datetime import datetime, timedelta, date
-
-'''
-import calendar
-import datetime
+from dateutil.relativedelta import relativedelta
 import locale
 # for German locale
 locale.setlocale(locale.LC_TIME, "de_DE")
-'''
+
 
 '''
 An alternative Doodle in which you cross-out on which days you are not available (on default, if you can only on a few
@@ -21,11 +18,7 @@ An alternative Doodle in which you cross-out on which days you are not available
         grey-ing. While greying the changed (also prior changed) days should be marked somehow, and also the only
          possible changeable. 
 
-Maybe let the users vote over this what they prefer. Collect their answer + ip
-
-How do I display the calender via raspy on a website? ask Nialing maybe. Hopefully I only need a bit o java, html and
- css. The Site should just update if somebody looks up the site or enters a new entry. The information could be saved
-  file-wise per month on the raspy.
+Maybe let the users vote over this what they prefer. Collect their answer + ~~ip~~ name.
 
 I need a file format: array  for each day: 0-gray, "none"-green, 2 orange. Every days "number" should also have none or 
  the respective changer so one can see what he changed only. So I actually need a fourth color 1-light_grey so the
@@ -42,20 +35,24 @@ the program should notice which day the last day was, everybody has seen, and th
 The automatic storage of votes on blur/close of the Tab should be done in the REST architectural style like adviced by 
  Minutenreis.
 Alike the transfer of data from front-end to back-end and vice versa should be in the same fashion and flexible:
-    Only an arbitrary lenght (month-wise (30, 61, 91, ...)) of dates is sent, the starting point is always current time. 
-    A safety check would be that the expected lengths are the same 
+    Only an arbitrary length (month-wise (e.g. 30, 61, 91, ...)) of dates is sent, the starting point is always current time. 
+    An initial safety check would be that the expected lengths are the same - once at the start (at client side only and per every blur/reload) 
         (which would raise errors when the local time on one machine is different, the user reloaded an old instance
          from cache from the day before or over midnight 23:59:59 -> 00:00:00)     
 '''
 
 
-def flash(day):
-    # do alert animation on day which cannot be changed
-    print("not allowed action")
-    pass
+def current_day_range(month_range=2):  # get the current and same array of dates as the client
+    today = datetime.today()
+    months = [today + relativedelta(months=mon) for mon in range(month_range+1)]
+    dates = []
+    for month in months:
+        num_days = calendar.monthrange(month.year, month.month)[1]
+        dates += [date(month.year, month.month, day) for day in range(1, num_days+1)]
+    return dates
 
 
-# I build a dictionary for storage of all infos
+# Build a dictionary for storage of all infos user-wise and group-wise
 def load_user_dictionary():
     # search for file, if not present create one
     # returning empty dict now just for testing:
