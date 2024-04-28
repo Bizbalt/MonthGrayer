@@ -36,7 +36,7 @@ def free_day(username, day):
 @views.route('/user/<string:username>')
 def command(username=None):
     # checking for existing user - might not exist yet
-    users = open("users.txt").read().splitlines()
+    users = open("data/users.txt").read().splitlines()
 
     if not username in users:
         return "no user found"
