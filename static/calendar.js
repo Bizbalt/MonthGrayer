@@ -10,7 +10,7 @@ CELL_STATE = {
 
 async function mark_day(td) {
     const classes = td.getAttribute("class")
-    const day = td.innerText
+    const day = td.innerText // day is the distance from the first day of the month.
     let success = false
     switch (classes) {
         case "greyed":

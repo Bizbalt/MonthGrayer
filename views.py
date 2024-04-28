@@ -22,14 +22,14 @@ def intro_page():
 @views.route("/grey_day/<string:username>/<string:day_distance>")
 def grey_day(username, day_distance):
     calendar_data = MonthGreyer(username)
-    success = calendar_data.grey_day(day_distance)
+    success = calendar_data.grey_day(int(day_distance))
     return str(success)
 
 
-@views.route("/free_day/<string:username>/<string:day>")
-def free_day(username, day):
+@views.route("/free_day/<string:username>/<string:day_distance>")
+def free_day(username, day_distance):
     calendar_data = MonthGreyer(username)
-    success = calendar_data.free_day(day)
+    success = calendar_data.free_day(int(day_distance))
     return str(success)
 
 
@@ -42,4 +42,4 @@ def command(username=None):
         return "no user found"
     
     calendar_data = MonthGreyer(username)
-    return jsonify(calendar_data.get_choice_markings())
+    return calendar_data.get_choice_markings()

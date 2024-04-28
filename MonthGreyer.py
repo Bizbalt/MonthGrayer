@@ -77,7 +77,7 @@ class MonthGreyer:
         self.user = current_user
         self.user_groups = load_user_groups(self.user)
         self.all_markings = generate_group_dictionary(self.user_groups)
-        self.today = datetime.today()
+        self.today = datetime.today().date()
 
         # compute the days of the month in range
         months = [self.today + relativedelta(months=mon) for mon in range(month_range + 1)]
@@ -87,9 +87,9 @@ class MonthGreyer:
             dates += [date(month.year, month.month, day) for day in range(1, num_days + 1)]
         # compute the past days
         self.current_dates = dates
-        self.past_dates = [day for day in dates if day < self.today.date()]
+        self.past_dates = [day for day in dates if day < self.today]
         # compute the future days
-        self.future_dates = [day for day in dates if day > self.today.date()]
+        self.future_dates = [day for day in dates if day > self.today]
 
         self.markings = self.load_user_markings()
 
@@ -98,27 +98,26 @@ class MonthGreyer:
             self.today.year, self.today.month, 1).strftime("MonthGreyer for %B of the year %Y for the user "
                                                            ) + self.user
 
-    def grey_day(self, day: datetime.date):
-        if day in self.markings:
-            if self.markings[day] == "freed" or self.markings[day] == "free":
-                self.markings[day] = "grayed"
-                return True
-            else:
-                raise ValueError("Day already marked")
-
-        return False
-
-    def free_day(self, day: datetime.date):
-        if day in self.markings and self.markings[day] == "grayed":
-            self.markings[day] = "freed"
+    def grey_day(self, distance: int):  # distance from the first day of the month
+        if self.markings[distance] == "freed" or self.markings[distance] == "free":
+            self.markings[distance] = "self_blocked"
+            self.save_user_markings()
             return True
         else:
-            raise ValueError("Illegal action")
+            raise ValueError("Day already blocked")
+
+    def free_day(self, distance: int):  # distance from the first day of the month
+        if self.markings[distance] == "self_blocked":
+            self.markings[distance] = "freed"
+            self.save_user_markings()
+            return True
+        else:
+            raise ValueError("Day cannot be freed (again)")
 
     def save_user_markings(self):
         markings_dict = {str(self.current_dates[i]): self.markings[i] for i in range(len(self.current_dates))}
         with open("data/" + self.user + ".json", "w") as file:
-            json.dump(markings_dict, file)
+            json.dump(markings_dict, file, indent=1)
 
     def load_user_markings(self):
         with open("data/" + self.user + ".json", "r") as file:
@@ -129,7 +128,7 @@ class MonthGreyer:
         # decode the marking to an array
         current_user_markings = len(self.past_dates) * ["past"]
         for day in [self.today] + self.future_dates:
-            current_user_markings.append(markings[str(day)] if day in markings else "free")
+            current_user_markings.append(markings[str(day)] if str(day) in markings else "free")
         return current_user_markings
 
     def get_choice_markings(self):  # ToDo: Compute the combined markings for all groups of the user.
