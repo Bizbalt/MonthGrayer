@@ -1,0 +1,47 @@
+/* Table settings the hash indicates that a ID attribute of an HTML element is accessed*/
+#calendar_table {
+    font-family: "Arial Black", serif;
+    color: white;
+    border-color: red;
+    width: 80%;
+    max-width: 800px;
+    border-collapse: collapse;
+    margin: 0 auto;
+
+    td {
+        cursor: pointer;
+        width: 14.28%;
+        user-select: none;
+    }
+
+    tr {
+        text-align: center;
+        height: 50px;
+    }
+}
+
+#month_year {
+    color: white;
+}
+
+.self_blocked {
+    background-color: grey;
+}
+
+.free {
+    background-color: green;
+}
+
+.freed {
+    background-color: orange;
+}
+
+.blocked {
+    cursor: default !important;
+    background-color: #545454;
+}
+
+.past {
+    cursor: default !important;
+    background-color: none;
+}

@@ -3,192 +3,19 @@
 
 <head>
     <title>Month Grayer</title>
-    <style>
-        .button {
-            background-color: #3d4d5d;
-            margin: 5px;
-            padding: 8px 16px;
-            border: #44494d 3px solid;
-            border-radius: 4px;
-            color: #000000;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        tr {
-            text-align: center;
-            height: 50px;
-        }
-
-        td {
-            cursor: pointer;
-            width: 14.28%;
-            user-select: none;
-        }
-
-        #calendar_table {
-            width: 80%;
-            max-width: 800px;
-            border-collapse: collapse;
-            margin: 0 auto;
-        }
-
-        #month_year {
-            color: white;
-        }
-
-        .grey {
-            background-color: grey;
-        }
-
-        .green {
-            background-color: green;
-        }
-
-        .orange {
-            background-color: orange;
-        }
-
-        .dark_grey {
-            background-color: #545454;
-        }
-    </style>
-
-    <script>
-        url = this.location.origin + "/"
-
-        COLOR = {
-            "grey": "grey",
-            "green": "green",
-            "orange": "orange",
-            "dark_grey": "dark_grey",
-        }
-
-        async function mark_day(td) {
-            const classes = td.getAttribute("class")
-            const day = td.innerText
-            let success = false
-            switch (classes) {
-                case "grey":
-                    success = await (await fetch(url + `free_day/${current_user}/${day}`)).text() === "True"
-                    if (success) {
-                        td.setAttribute("class", COLOR.orange);
-                    }
-                    return;
-                case "green":
-                case "orange":
-                    success = Boolean(await (await fetch(url + `grey_day/${current_user}/${day}`)).text()) === "True"
-                    if (success) {
-                        td.setAttribute("class", COLOR.grey);
-                    }
-                    return;
-                default:
-                    // ToDo: Flash that td (table data cell) if the action is not allowed
-                    console.log("Can't mark day " + day)
-                    return;
-            }
-        }
-
-        async function init() {
-            // generate the calendar
-            const calendar = document.getElementById("calendar_table")
-            const date = new Date()
-            const month = date.getMonth() // 0 = Jan, 11 = Dec
-            const year = date.getFullYear()
-            const weekdayOf1st = new Date(year, month, 1).getDay() // 0 = Sunday, 6 = Saturday
-            const emptyFields = (weekdayOf1st - 1) % 7 // 0 = Monday, 6 = Sunday
-            const daysInMonth = new Date(year, month + 1, 0).getDate()
-            const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-
-            // headline
-            const h3 = document.getElementById("month_year")
-            h3.innerText = `${months[month]} ${year}`
-
-            // create the header
-            let tr = document.createElement("tr")
-            calendar.appendChild(tr)
-            for (let i = 0; i < 7; i++) {
-                let th = document.createElement("th")
-                th.innerText = weekdays[i]
-                tr.appendChild(th)
-            }
-
-            // create the days (empty fields in the beginning to match weekdays)
-            for (let i = 0; i < daysInMonth + emptyFields; i++) {
-                if (i % 7 === 0) {
-                    tr = document.createElement("tr")
-                    calendar.appendChild(tr)
-                }
-                const td = document.createElement("td")
-                tr.appendChild(td)
-                if (i < emptyFields) {
-                    td.innerText = ""
-                } else {
-                    td.innerText = i - emptyFields + 1
-                    td.setAttribute("class", COLOR.dark_grey)
-                    td.setAttribute("onclick", "mark_day(this)")
-                }
-            }
-
-            // testing generation for multiple months
-            function currentDayRange(monthRange = 2) { // function gives out a range of dates for a range of months starting from today
-                let today = new Date();
-                let months = [];
-                for (let mon = 0; mon <= monthRange; mon++) {
-                    let newDate = new Date(today.getFullYear(), today.getMonth() + mon, 1);
-                    months.push(newDate);
-                }
-                let dates = [];
-                months.forEach(month => {
-                    let numDays = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
-                    for (let day = 1; day <= numDays; day++) {
-                        let newDay = new Date(month.getFullYear(), month.getMonth(), day);
-                        dates.push(newDay);
-                    }
-                });
-                return dates;
-            }
-            console.log(currentDayRange().length);
-
-        }
-
-
-        function fillTable() {
-            //todo: get current free (green) self greyed out (grey) freed again (orange) and greyed out by others (dark_grey) days from user_check.js
-
-            //todo: expects above as array of COLOR
-            const days = [COLOR.grey, COLOR.grey, COLOR.green, COLOR.green, COLOR.green,
-            COLOR.green, COLOR.dark_grey, COLOR.dark_grey, COLOR.dark_grey, COLOR.dark_grey,
-            COLOR.grey, COLOR.grey, COLOR.green, COLOR.green, COLOR.green,
-            COLOR.green, COLOR.dark_grey, COLOR.dark_grey, COLOR.dark_grey, COLOR.dark_grey,
-            COLOR.grey, COLOR.grey, COLOR.green, COLOR.green, COLOR.green,
-            COLOR.orange, COLOR.orange, COLOR.orange, COLOR.orange, COLOR.orange, COLOR.orange]
-
-            const calendar = document.getElementById("calendar_table")
-            for (tr of calendar.children) {
-                for (td of tr.children) {
-                    const day = td.innerText
-                    if (day != null) {
-                        td.setAttribute("class", days[day - 1]) // -1 because days start at 1, array at 0
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" type="text/css" href="../static/monthGrayer.css">
 
     <script>
         // ToDo: autosave: The user dictionary is updated on every click, albeit the "finished vote" status is found when he closes the page or goes to another tab in his browser for a certain time (10 seconds?).
-
     </script>
+    <script type="text/javascript" src="../static/calendar.js"></script>
     <script type="text/javascript" src="../static/fade_script.js"></script>
     <script type="text/javascript" src="../static/user_check.js"></script>
     <script type="text/javascript" src="../static/dynamic_input-box_width.js"></script>
-    <link href="../static/style.css" rel="stylesheet" type="text/css"/>
-
+    <link href="../static/style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body onload="init()">
+<body onload="calendarInit()">
     <h1 style>
         Month Grayer
     </h1>
@@ -203,10 +30,10 @@
     <br>
 
 
-    <fade-div class="fade_div" id="calendarContainer" >
-    <h2 id="month_year" style="text-align: center; font-size: 40px;"></h2>
-    <table id="calendar_table" >
-    </table>
+    <fade-div class="fade_div" id="calendarContainer">
+        <h2 id="month_year" style="text-align: center; font-size: 40px;"></h2>
+        <table id="calendar_table">
+        </table>
     </fade-div>
 
 </body>

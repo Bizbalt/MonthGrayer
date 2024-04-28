@@ -23,13 +23,13 @@ async function check_user() {
             btn.innerHTML = "Create new user " + user + "?";
             current_user = "" // clear out possible previous different user on same client
             create_user_opportunity = 3 // timer
-            offer_new_user(user)
+            await offer_new_user(user)
         }
     }
     else {
         btn.style.display = "none";
         current_user = user
-        fillTable()
+        fillCalendar()
         //  ToDo: construct the view to create a new user and then fade it in
         auto_fade_in(document.getElementById("calendarContainer"))
     }

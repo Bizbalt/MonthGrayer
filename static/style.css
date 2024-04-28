@@ -1,4 +1,4 @@
-body{
+body {
   background: #2b2b2c;
   text-align: center;
 }
@@ -14,24 +14,26 @@ footer {
 }
 
 h1 {
-    font-size: 50px;
-    color: white;
-    font-family: "Arial Black", serif;
+  font-size: 50px;
+  color: white;
+  font-family: "Arial Black", serif;
 }
 
 button {
-    background-color: #396ea2;
-    margin: 5px;
-    padding: 8px 16px;
-    border: #697177 3px solid;
-    border-radius: 4px;
-    color: #000000;
-    font-weight: bold;
-    cursor: pointer;
+  background-color: #396ea2;
+  margin: 5px;
+  padding: 8px 16px;
+  border: #697177 3px solid;
+  border-radius: 4px;
+  color: #000000;
+  font-weight: bold;
+  cursor: pointer;
 }
+
 /* Initial state of the containers to fade in */
 fade-div {
-    opacity: 20%; /* ToDo: set to 0% later. Yet the 20% are just for debugging reasons */
+  opacity: 20%;
+  /* ToDo: set to 0% later. Yet the 20% are just for debugging reasons */
 }
 
 /*the fade animations*/
@@ -39,6 +41,7 @@ fade-div {
   from {
     opacity: 100%;
   }
+
   to {
     opacity: 0%;
   }
@@ -48,15 +51,8 @@ fade-div {
   from {
     opacity: 0%;
   }
+
   to {
     opacity: 100%;
   }
-}
-
-/* Table settings the hash indicates that a ID attribute of an HTML element is accessed*/
-#calendar_table {
-  font-family: "Arial Black", serif;
-  color: white;
-  border-collapse: collapse;
-  border-color: red; /*transparent;*/
 }
