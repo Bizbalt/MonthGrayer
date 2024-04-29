@@ -7,18 +7,18 @@
     max-width: 800px;
     border-collapse: collapse;
     margin: 0 auto;
+}
 
-    td {
+#calendar_table td {
         cursor: pointer;
         width: 14.28%;
         user-select: none;
     }
 
-    tr {
+#calendar_table tr {
         text-align: center;
         height: 50px;
     }
-}
 
 #month_year {
     color: white;
@@ -43,5 +43,5 @@
 
 .past {
     cursor: default !important;
-    background-color: none;
+    background-color: transparent;
 }
