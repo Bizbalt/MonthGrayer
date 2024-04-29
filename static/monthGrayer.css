@@ -45,3 +45,12 @@
     cursor: default !important;
     background-color: transparent;
 }
+
+/* Initial state of the containers to fade in */
+fade-div {
+  opacity: 20%;
+  /* ToDo: set opacity to 0% later. Set visibility to none. Yet the 20% are just for debugging reasons
+      display = none;
+      opacity: 0%;
+      */
+}
