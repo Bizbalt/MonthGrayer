@@ -120,11 +120,11 @@ class MonthGreyer:
             json.dump(markings_dict, file, indent=1)
 
     def load_user_markings(self):
-        with open("data/" + self.user + ".json", "r") as file:
-            try:
+        try:
+            with open("data/" + self.user + ".json", "r") as file:
                 markings = json.load(file)
-            except json.JSONDecodeError:
-                print("No markings found for user " + self.user)
+        except (json.JSONDecodeError,FileNotFoundError):
+            raise FileNotFoundError("No markings found for user " + self.user)
         # decode the marking to an array
         current_user_markings = len(self.past_dates) * ["past"]
         for day in [self.today] + self.future_dates:
