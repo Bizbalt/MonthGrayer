@@ -34,8 +34,8 @@ async function mark_day(td) {
 }
 
 async function calendarInit() {
+    const calendarContainer = document.getElementById("calendarContainer")
     // generate the calendar
-    const calendar = document.getElementById("calendar_table")
     const today = new Date()
     const month = today.getMonth() // 0 = Jan, 11 = Dec
     const year = today.getFullYear()
@@ -46,8 +46,14 @@ async function calendarInit() {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
     // headline
-    const h3 = document.getElementById("month_year")
-    h3.innerText = `${months[month]} ${year}`
+    const h2 = document.createElement("h2")
+    h2.innerText = `${months[month]} ${year}`
+    h2.setAttribute("class", "h2")
+
+    // create the table
+    const calendar = document.createElement("table")
+    calendar.setAttribute("id", "calendar_table")
+    calendarContainer.appendChild(h2)
 
     // create the header
     let tr = document.createElement("tr")
@@ -70,13 +76,30 @@ async function calendarInit() {
             td.innerText = ""
         } else {
             const day = i - emptyFields + 1
-            td.innerText = day
+            td.innerText = day.toString()
             td.setAttribute("class", CELL_STATE.past)
             td.setAttribute("onclick", "mark_day(this)")
         }
-
-
     }
+    calendarContainer.appendChild(calendar)
+
+    // testing to create procedurally new tables per month
+    // const calendar_container = document.getElementById("calendarContainer")
+    // const next_table = document.createElement("table")
+    // next_table.appendChild(tr)
+    // for (let i = 0; i < 7; i++) {
+    // let th = document.createElement("th")
+    // th.innerText = weekdays[i]
+    // tr.appendChild(th)
+    // }
+    // // create a break before appending the next table
+    // const br = document.createElement("br")
+    // calendar_container.appendChild(br)
+    //
+    // calendar_container.appendChild(next_table)
+
+
+
 }
 
 // testing generation for multiple months
@@ -110,7 +133,7 @@ function fillCalendar(markings) {
     for (tr of calendar.children) {
         for (td of tr.children) {
             const day = td.innerText
-            const distance = td.distance = day - 1 // day is the distance from the first day of the month.
+            const distance = td.distance = +day - 1 // day is the distance from the first day of the month.
             if (day != null) {
                 td.setAttribute("class", markings[distance]) // -1 because days start at 1, array at 0
             }
