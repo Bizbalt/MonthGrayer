@@ -99,27 +99,23 @@ function currentDayRange(monthRange = 2) { // function gives out a range of date
     });
     return dates;
 }
-console.log(currentDayRange().length);
 
-function fillCalendar() {
-    //todo: get current free (green) self greyed out (grey) freed again (orange) and greyed out by others (dark_grey) days from user_check.js
+function fillCalendar(markings) {
+    // check size of markings against expected sizes
+    if (markings.length !== currentDayRange().length) {
+        console.log("Error: markings array does not match the expected size, are you in the same time")
+        return
+    }
 
-    //todo: expects above as array of COLOR
-    const days = [CELL_STATE.past, CELL_STATE.past, CELL_STATE.past, CELL_STATE.past, CELL_STATE.past,
-    CELL_STATE.past, CELL_STATE.past, CELL_STATE.past, CELL_STATE.blocked, CELL_STATE.blocked,
-    CELL_STATE.self_blocked, CELL_STATE.self_blocked, CELL_STATE.free, CELL_STATE.free, CELL_STATE.free,
-    CELL_STATE.free, CELL_STATE.blocked, CELL_STATE.blocked, CELL_STATE.blocked, CELL_STATE.blocked,
-    CELL_STATE.self_blocked, CELL_STATE.self_blocked, CELL_STATE.free, CELL_STATE.free, CELL_STATE.free,
-    CELL_STATE.freed, CELL_STATE.freed, CELL_STATE.freed, CELL_STATE.freed, CELL_STATE.freed, CELL_STATE.freed]
-
+    // ToDo: fill multiple months according to range
     const calendar = document.getElementById("calendar_table")
-    let day = 0
     for (tr of calendar.children) {
         for (td of tr.children) {
             const day = td.innerText
             if (day != null) {
-                td.setAttribute("class", days[day - 1]) // -1 because days start at 1, array at 0
+                td.setAttribute("class", markings[day - 1]) // -1 because days start at 1, array at 0
             }
         }
     }
+    return true // send success for fading in
 }

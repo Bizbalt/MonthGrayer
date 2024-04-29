@@ -42,4 +42,4 @@ def command(username=None):
         return "no user found"
     
     calendar_data = MonthGreyer(username)
-    return calendar_data.get_choice_markings()
+    return jsonify(calendar_data.get_choice_markings())

@@ -29,9 +29,11 @@ async function check_user() {
     else {
         btn.style.display = "none";
         current_user = user
-        fillCalendar()
-        //  ToDo: construct the view to create a new user and then fade it in
-        auto_fade_in(document.getElementById("calendarContainer"))
+        // change the type of the responseText from string to json
+        const markings = JSON.parse(responseText)
+        if (fillCalendar(markings)) {
+            auto_fade_in(document.getElementById("calendarContainer"))
+        }
     }
 }
 
