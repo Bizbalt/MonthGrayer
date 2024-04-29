@@ -2,9 +2,9 @@ const url = this.location.origin + "/"
 
 CELL_STATE = {
     "free": "free",
-    "self_blocked": "self_blocked",
     "freed": "freed",
     "blocked": "blocked",
+    "self_blocked": "self_blocked",
     "past": "past",
 }
 
@@ -13,17 +13,17 @@ async function mark_day(td) {
     const day = td.innerText // day is the distance from the first day of the month.
     let success = false
     switch (classes) {
-        case "greyed":
-            success = await (await fetch(url + `free_day/${current_user}/${day}`)).text() === "True"
-            if (success) {
-                td.setAttribute("class", CELL_STATE.freed);
-            }
-            return;
         case "free":
         case "freed":
-            success = Boolean(await (await fetch(url + `grey_day/${current_user}/${day}`)).text()) === "True"
+            success = await (await fetch(url + `grey_day/${current_user}/${day}`)).text() === "True"
             if (success) {
                 td.setAttribute("class", CELL_STATE.self_blocked);
+            }
+            return;
+        case "self_blocked":
+            success = await (await fetch(url + `free_day/${current_user}/${day}`)).text() === "True"
+            if (success) { // ToDo: If the day was just *recently* self-blocked, it should be set to free instead (e.g. missclick)
+                td.setAttribute("class", CELL_STATE.freed);
             }
             return;
         default:

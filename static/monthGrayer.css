@@ -24,10 +24,6 @@
     color: white;
 }
 
-.self_blocked {
-    background-color: grey;
-}
-
 .free {
     background-color: green;
 }
@@ -39,6 +35,10 @@
 .blocked {
     cursor: default !important;
     background-color: #545454;
+}
+
+.self_blocked {
+    background-color: grey;
 }
 
 .past {
