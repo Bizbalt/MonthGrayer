@@ -10,25 +10,25 @@ CELL_STATE = {
 
 async function mark_day(td) {
     const classes = td.getAttribute("class")
-    const day = td.innerText // day is the distance from the first day of the month.
+    const distance = td.distance  // day is the distance from the first day of the month.
     let success = false
     switch (classes) {
         case "free":
         case "freed":
-            success = await (await fetch(url + `grey_day/${current_user}/${day}`)).text() === "True"
+            success = await (await fetch(url + `grey_day/${current_user}/${distance}`)).text() === "True"
             if (success) {
                 td.setAttribute("class", CELL_STATE.self_blocked);
             }
             return;
         case "self_blocked":
-            success = await (await fetch(url + `free_day/${current_user}/${day}`)).text() === "True"
+            success = await (await fetch(url + `free_day/${current_user}/${distance}`)).text() === "True"
             if (success) { // ToDo: If the day was just *recently* self-blocked, it should be set to free instead (e.g. missclick)
                 td.setAttribute("class", CELL_STATE.freed);
             }
             return;
         default:
             // ToDo: Flash that td (table data cell) if the action is not allowed
-            console.log("Can't mark day " + day)
+            console.log("Can't mark day " + distance)
             return;
     }
 }
@@ -71,10 +71,8 @@ async function calendarInit() {
         } else {
             const day = i - emptyFields + 1
             td.innerText = day
-            if (day < today.getDate() && month <= today.getMonth() && year <= today.getFullYear()) {
-                td.setAttribute("class", CELL_STATE.past)
-                td.setAttribute("onclick", "mark_day(this)")
-            }
+            td.setAttribute("class", CELL_STATE.past)
+            td.setAttribute("onclick", "mark_day(this)")
         }
 
 
@@ -112,8 +110,9 @@ function fillCalendar(markings) {
     for (tr of calendar.children) {
         for (td of tr.children) {
             const day = td.innerText
+            const distance = td.distance = day - 1 // day is the distance from the first day of the month.
             if (day != null) {
-                td.setAttribute("class", markings[day - 1]) // -1 because days start at 1, array at 0
+                td.setAttribute("class", markings[distance]) // -1 because days start at 1, array at 0
             }
         }
     }
