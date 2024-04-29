@@ -1,11 +1,11 @@
 const url = this.location.origin + "/"
 
-CELL_STATE = {
-    "free": "free",
-    "freed": "freed",
-    "blocked": "blocked",
-    "self_blocked": "self_blocked",
-    "past": "past",
+const CELL_STATE = {
+    free: "free",
+    freed: "freed",
+    blocked: "blocked",
+    self_blocked: "self_blocked",
+    past: "past",
 }
 
 async function mark_day(td) {
