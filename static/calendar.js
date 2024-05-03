@@ -22,7 +22,9 @@ async function mark_day(td) {
             return;
         case "self_blocked":
             success = await (await fetch(url + `free_day/${current_user}/${distance}`)).text() === "True"
-            if (success) { // ToDo: If the day was just *recently* self-blocked, it should be set to free instead (e.g. missclick)
+            if (success) { /* ToDo: If the day was just *recently* self-blocked, it should be set to free instead
+            (e.g. missclick) This should e checked over "did all already vote?" process:
+            If the last vote from that user was on the same day do not mark it as freed but free */
                 td.setAttribute("class", CELL_STATE.freed);
             }
             return;
@@ -121,7 +123,7 @@ function currentDayRange(monthRange = 2) { // function gives out a range of date
     return dates;
 }
 
-function fillCalendar(markings) {
+function checkCalendarSync(markings) {
     // check size of markings against expected sizes
     if (markings.length !== currentDayRange().length) {
         console.log("Error: markings array does not match the expected size, are you in the same time")
