@@ -33,6 +33,13 @@ def free_day(username, day_distance):
     return str(success)
 
 
+@views.route("/de_grey_day/<string:username>/<string:day_distance>")
+def de_grey_day(username, day_distance):
+    calendar_data = MonthGreyer(username)
+    success = calendar_data.de_grey_day(int(day_distance))
+    return str(success)
+
+
 @views.route('/user/<string:username>')
 def command(username=None):
     # checking for existing user - might not exist yet

@@ -8,12 +8,21 @@ const CELL_STATE = {
     past: "past",
 }
 
+// create a dictionary per session to store the currently greyed days for freeing instead or "freed-ing"
+let session_greyed_days = {}
+
 async function mark_day(td) {
     const classes = td.getAttribute("class")
     const distance = td.distance  // day is the distance from the first day of the month.
     let success = false
     switch (classes) {
         case "free":
+            success = await (await fetch(url + `grey_day/${current_user}/${distance}`)).text() === "True"
+            if (success) {
+                td.setAttribute("class", CELL_STATE.self_blocked);
+                session_greyed_days[distance] = true
+            }
+            return;
         case "freed":
             success = await (await fetch(url + `grey_day/${current_user}/${distance}`)).text() === "True"
             if (success) {
@@ -21,11 +30,17 @@ async function mark_day(td) {
             }
             return;
         case "self_blocked":
-            success = await (await fetch(url + `free_day/${current_user}/${distance}`)).text() === "True"
-            if (success) { /* ToDo: If the day was just *recently* self-blocked, it should be set to free instead
-            (e.g. missclick) This should e checked over "did all already vote?" process:
-            If the last vote from that user was on the same day do not mark it as freed but free */
-                td.setAttribute("class", CELL_STATE.freed);
+            if (distance in session_greyed_days) {
+                success = await (await fetch(url + `de_grey_day/${current_user}/${distance}`)).text() === "True"
+                if (success) {
+                    td.setAttribute("class", CELL_STATE.free);
+                }
+            }
+            else {
+                success = await (await fetch(url + `free_day/${current_user}/${distance}`)).text() === "True"
+                if (success) {
+                    td.setAttribute("class", CELL_STATE.freed);
+                }
             }
             return;
         default:
@@ -147,7 +162,7 @@ function fillCalendar(markings) {
                 const day = td.innerText
                 const distance = td.distance = day_distance // day is the distance from the first day of the month.
                 day_distance++
-                    td.setAttribute("class", markings[distance]) // -1 because days start at 1, array at 0
+                    td.setAttribute("class", markings[distance])
 
             }
         }

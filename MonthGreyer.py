@@ -20,9 +20,9 @@ An alternative Doodle in which you cross-out on which days you are not available
 
 Maybe let the users vote over this what they prefer. Collect their answer + ~~ip~~ name.
 
-I need a file format: array  for each day: 0-gray, "none"-green, 2 orange. Every days "number" should also have none or 
+I need a file format: array  for each day: 0-grey, "none"-green, 2 orange. Every days "number" should also have none or 
  the respective changer so one can see what he changed only. So I actually need a fourth color 1-light_grey so the
-  person which grayed it can see that he can ungray it.
+  person which greyed it can see that he can ungrey it.
 Storing wise the greying of persons should be stored and if not applicable, the greying
  for the "group"-account. Then on load the overall greying should be computed out of those. 
 
@@ -44,7 +44,7 @@ Alike the transfer of data from front-end to back-end and vice versa should be i
 STATE_description = {"free": "green - day has not not been voted to be blocked",
                      "freed": "orange - day was blocked and then freed by same user after a time",
                      "blocked": "grey - day has been voted to be blocked",
-                     "self_blocked": "light_grayed - day has been voted to be blocked by the user himself",
+                     "self_blocked": "light_greyed - day has been voted to be blocked by the user himself",
                      "past": "colorless - day lies in the past and is not of interest anymore"}
 
 
@@ -74,6 +74,7 @@ def generate_group_dictionary(group):
 #
 class MonthGreyer:
     def __init__(self, current_user, month_range=2):
+        # ToDo: add user to group as seen (today.month + m_range)
         self.user = current_user
         self.user_groups = load_user_groups(self.user)
         self.all_markings = generate_group_dictionary(self.user_groups)
@@ -109,6 +110,14 @@ class MonthGreyer:
     def free_day(self, distance: int):  # distance from the first day of the month
         if self.markings[distance] == "self_blocked":
             self.markings[distance] = "freed"
+            self.save_user_markings()
+            return True
+        else:
+            raise ValueError("Day cannot be freed (again)")
+
+    def de_grey_day(self, distance: int):  # distance from the first day of the month
+        if self.markings[distance] == "self_blocked":
+            self.markings[distance] = "free"
             self.save_user_markings()
             return True
         else:
