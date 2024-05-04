@@ -31,7 +31,7 @@ async function check_user() {
         current_user = user
         // change the type of the responseText from string to json
         const markings = JSON.parse(responseText)
-        if (checkCalendarSync(markings)) {
+        if (fillCalendar(markings)) {
             auto_fade_in(document.getElementById("calendarContainer"))
         }
     }
