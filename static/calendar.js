@@ -147,7 +147,6 @@ function fillCalendar(markings) {
                 const day = td.innerText
                 const distance = td.distance = day_distance // day is the distance from the first day of the month.
                 day_distance++
-                console.log("Day: " + day + " Distance: " + distance)
                     td.setAttribute("class", markings[distance]) // -1 because days start at 1, array at 0
 
             }
