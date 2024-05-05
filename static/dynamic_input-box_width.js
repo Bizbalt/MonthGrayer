@@ -1,12 +1,12 @@
 // to get width of the input, create a new span element and measure its width
 function getWidthOfInput(event) {
     input = document.getElementById("current_user")
-
+    compStyle = window.getComputedStyle(input)
     // generate span
     const tmp = document.createElement("span")
-    tmp.style.font = input.style.font
     tmp.style.visibility = "hidden"
-    tmp.style.fontSize = input.style.fontSize
+    tmp.style.fontFamily = compStyle.fontFamily
+    tmp.style.fontSize = compStyle.fontSize
     tmp.style.whiteSpace = "pre"
     tmp.innerText = input.value
 
