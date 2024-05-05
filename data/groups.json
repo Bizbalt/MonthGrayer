@@ -1,0 +1,31 @@
+{
+ "gruppenname": {
+  "users": [
+   "bob",
+   "tim"
+  ]
+ },
+ "gruppenname2": {
+  "users": [
+   "tim"
+  ]
+ },
+ "gruppenname3": {
+  "users": [
+   "tim",
+   "tim",
+   "bob"
+  ]
+ },
+ "gruppenname4": {
+  "users": [
+   "tim",
+   "tim"
+  ]
+ },
+ "gruppenname5": {
+  "users": [
+   "bob"
+  ]
+ }
+}

@@ -2,9 +2,9 @@ import calendar
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 import locale
+import json
 # for German locale
 locale.setlocale(locale.LC_TIME, "de_DE.utf8")
-import json
 
 '''
 An alternative Doodle in which you cross-out on which days you are not available (on default, if you can only on a few
@@ -57,27 +57,63 @@ def date_range(start, end):
 
 
 # Build a dictionary for storage of all infos user-wise and group-wise
-def load_user_groups(user):
-    # see above
-    return dict()
+def load_user_groups_users(user):
+    with open("data/groups.json", "r") as file:
+        groups = json.load(file)
+    user_groups = []  # list the groups the user is in
+
+    for group in groups.keys():
+        if user in groups[group]["users"]:
+            user_groups.append(group)
+
+    groups_users = []  # list all users in the groups the user is in
+    for group in user_groups:
+        for group_user in group["users"]:
+            if group_user not in groups_users and group_user != user:
+                groups_users.append(user)
+    return groups_users
+
+# ToDo: put these two together: I need to gen all self_greyed/freeds per group and then compare those to generate the blocked/free/freed days for a user
+# one self_greyed in the group -> blocked for group
+    # all blocked in the groups -> blocked for user_markings
+# one freed and none self_greyed in the group -> freed for group
+    # one or more freed and all else self_greyed in the groups -> freed for user_markings
+    # one freed and any other free in the groups -> free for user_markings
+
+def generate_group_blocks(users):
+    group_days = [MonthGreyer(user).markings for user in users]
+    group_blocked_days = []
+    for users_day in zip(*group_days):
+        if "self_blocked" in users_day:
+            group_blocked_days.append("blocked")
+        else:
+            group_blocked_days.append("free")
+    return group_blocked_days
 
 
-def generate_group_dictionary(group):
-    # see above
-    # compute group from users
-    return dict()
-
+def add_user_to_group(user, new_group):
+    with open("data/groups.json", "r") as file:
+        groups = json.load(file)
+    if new_group not in groups:
+        groups[new_group] = {"users": [user]}  # create new group with user
+    elif user in groups[new_group]["users"]:
+        raise ValueError("User already in group")
+    else:
+        groups[new_group]["users"].append(user)
+    with open("data/groups.json", "w") as file:
+        json.dump(groups, file, indent=1)
 
 # TODO: Do I want dictionaries for every Person and the group or maybe every group?
 #  a good idea rn seems to be users only and a group dic for the interface gets created when needed.
 #  Since I also sometimes need groups as combinations of groups for a user who is in multiple - like me :P
-#
+
+
 class MonthGreyer:
     def __init__(self, current_user, month_range=2):
         # ToDo: add user to group as seen (today.month + m_range)
         self.user = current_user
-        self.user_groups = load_user_groups(self.user)
-        self.all_markings = generate_group_dictionary(self.user_groups)
+        self.groups_users = load_user_groups_users(self.user)
+        self.group_blocked = generate_group_blocks(self.groups_users)
         self.today = datetime.today().date()
 
         # compute the days of the month in range
@@ -132,7 +168,7 @@ class MonthGreyer:
         try:
             with open("data/" + self.user + ".json", "r") as file:
                 markings = json.load(file)
-        except (json.JSONDecodeError,FileNotFoundError):
+        except (json.JSONDecodeError, FileNotFoundError):
             raise FileNotFoundError("No markings found for user " + self.user)
         # decode the marking to an array
         current_user_markings = len(self.past_dates) * ["past"]
@@ -142,4 +178,3 @@ class MonthGreyer:
 
     def get_choice_markings(self):  # ToDo: Compute the combined markings for all groups of the user.
         return self.markings
-
