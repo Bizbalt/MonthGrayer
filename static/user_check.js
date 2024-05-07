@@ -3,7 +3,8 @@ let create_user_opportunity = -1
 async function check_user() {
     let btn = document.getElementById("create_user");
     create_user_opportunity = -1
-    const user = document.getElementById("current_user").value
+    console.log(current_user)
+    const user = document.getElementById("current_user").value.replace(/ /g, "")
     if (user === current_user) { // refrain from loading the same user again
         btn.style.display = "none";
         return
@@ -28,7 +29,7 @@ async function check_user() {
     }
     else {
         btn.style.display = "none";
-        current_user = user
+        current_user = user.replace(/ /g, "")
         // change the type of the responseText from string to json
         const markings = JSON.parse(responseText)
         if (fillCalendar(markings)) {
