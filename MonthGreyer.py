@@ -60,17 +60,15 @@ def date_range(start, end):
 def load_user_groups_users(user):
     with open("data/groups.json", "r") as file:
         groups = json.load(file)
-    user_groups = []  # list the groups the user is in
-
-    for group in groups.keys():
-        if user in groups[group]["users"]:
-            user_groups.append(group)
 
     groups_users = []  # list all users in the groups the user is in
-    for group in user_groups:
-        for group_user in group["users"]:
-            if group_user not in groups_users and group_user != user:
-                groups_users.append(user)
+    for group in groups.keys():
+        if user in groups[group]["users"]:
+            for group_user in groups[group]["users"]:
+                if group_user not in groups_users and group_user != user:
+                    groups_users.append(user)
+                print(group, group_user, groups_users)
+    print(groups_users)
     return groups_users
 
 # ToDo: put these two together: I need to gen all self_greyed/freeds per group and then compare those to generate the blocked/free/freed days for a user
@@ -112,8 +110,6 @@ class MonthGreyer:
     def __init__(self, current_user, month_range=2):
         # ToDo: add user to group as seen (today.month + m_range)
         self.user = current_user
-        self.groups_users = load_user_groups_users(self.user)
-        self.group_blocked = generate_group_blocks(self.groups_users)
         self.today = datetime.today().date()
 
         # compute the days of the month in range
@@ -177,4 +173,5 @@ class MonthGreyer:
         return current_user_markings
 
     def get_choice_markings(self):  # ToDo: Compute the combined markings for all groups of the user.
+        group_blocked = generate_group_blocks(load_user_groups_users(self.user))
         return self.markings
