@@ -66,9 +66,7 @@ def load_user_groups_users(user):
         if user in groups[group]["users"]:
             for group_user in groups[group]["users"]:
                 if group_user not in groups_users and group_user != user:
-                    groups_users.append(user)
-                print(group, group_user, groups_users)
-    print(groups_users)
+                    groups_users.append(group_user)
     return groups_users
 
 # ToDo: put these two together: I need to gen all self_greyed/freeds per group and then compare those to generate the blocked/free/freed days for a user
@@ -174,4 +172,6 @@ class MonthGreyer:
 
     def get_choice_markings(self):  # ToDo: Compute the combined markings for all groups of the user.
         group_blocked = generate_group_blocks(load_user_groups_users(self.user))
+        combined_markings = []
+        # 16.5 HS4 rechtsruck stoppen
         return self.markings
