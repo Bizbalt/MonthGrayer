@@ -1,7 +1,5 @@
 //toggle var
-var fade_state = true;
-//on btn click
-// ToDo: 🐞 fade status resets when changed within the 1s fade -> fades in and then the display attribute gets set to none.
+let fade_state = true;
 function fade() {
   //get the button and div
   let div = document.getElementById("div");
@@ -24,7 +22,7 @@ function fade() {
   }
 }
 
-var auto_fade_state = true; // default is faded
+let auto_fade_state = true; // default is faded
 
 function auto_fade_in(container) {
   if (auto_fade_state === true) {
@@ -39,11 +37,11 @@ function auto_fade_in(container) {
 function auto_fade_out(container) {
   if (auto_fade_state === false) {
     //triggers animation
-    container.style.animation = "fade-out 1s forwards";
+    container.style.animation = "fade-out 0.3s forwards";
     // hide container after animation
     setTimeout(function () {
       container.style.display = "none";
-    }, 1000);
-    auto_fade_state = true;
+      auto_fade_state = true;
+    }, 300);
   }
 }
