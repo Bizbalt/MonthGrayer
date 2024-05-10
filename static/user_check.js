@@ -3,7 +3,6 @@ let create_user_opportunity = -1
 async function check_user() {
     let btn = document.getElementById("create_user");
     create_user_opportunity = -1
-    console.log(current_user)
     const user = document.getElementById("current_user").value.replace(/ /g, "")
     if (user === current_user) { // refrain from loading the same user again
         btn.style.display = "none";

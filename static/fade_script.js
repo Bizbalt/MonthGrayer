@@ -1,6 +1,7 @@
 //toggle var
 var fade_state = true;
 //on btn click
+// ToDo: 🐞 fade status resets when changed within the 1s fade -> fades in and then the display attribute gets set to none.
 function fade() {
   //get the button and div
   let div = document.getElementById("div");

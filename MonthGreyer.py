@@ -56,35 +56,23 @@ def date_range(start, end):
     return days
 
 
-# Build a dictionary for storage of all infos user-wise and group-wise
-def load_user_groups_users(user):
+def combine_group_markings(group):
     with open("data/groups.json", "r") as file:
         groups = json.load(file)
 
-    groups_users = []  # list all users in the groups the user is in
-    for group in groups.keys():
-        if user in groups[group]["users"]:
-            for group_user in groups[group]["users"]:
-                if group_user not in groups_users and group_user != user:
-                    groups_users.append(group_user)
-    return groups_users
+    # get all the markings per user
+    user_markings = [MonthGreyer(user).markings for user in groups[group]["users"]]
 
-# ToDo: put these two together: I need to gen all self_greyed/freeds per group and then compare those to generate the blocked/free/freed days for a user
-# one self_greyed in the group -> blocked for group
-    # all blocked in the groups -> blocked for user_markings
-# one freed and none self_greyed in the group -> freed for group
-    # one or more freed and all else self_greyed in the groups -> freed for user_markings
-    # one freed and any other free in the groups -> free for user_markings
+    # combine the markings
+    priorities = {"past": "past", "self_blocked": "blocked", "freed": "freed", "free": "free"}
+    combined_markings = []
+    for day in zip(*user_markings):
+        for priority in priorities.keys():
+            if priority in day:
+                combined_markings.append(priorities[priority])
+                break
 
-def generate_group_blocks(users):
-    group_days = [MonthGreyer(user).markings for user in users]
-    group_blocked_days = []
-    for users_day in zip(*group_days):
-        if "self_blocked" in users_day:
-            group_blocked_days.append("blocked")
-        else:
-            group_blocked_days.append("free")
-    return group_blocked_days
+    return combined_markings
 
 
 def add_user_to_group(user, new_group):
@@ -108,6 +96,7 @@ class MonthGreyer:
     def __init__(self, current_user, month_range=2):
         # ToDo: add user to group as seen (today.month + m_range)
         self.user = current_user
+        self.month_range = month_range
         self.today = datetime.today().date()
 
         # compute the days of the month in range
@@ -127,7 +116,7 @@ class MonthGreyer:
     def __str__(self):  # https://docs.python.org/3.8/library/datetime.html#strftime-strptime-behavior
         return date(
             self.today.year, self.today.month, 1).strftime("MonthGreyer for %B of the year %Y for the user "
-                                                           ) + self.user
+                                                           ) + self.user + " (range {})".format(self.month_range)
 
     def grey_day(self, distance: int):  # distance from the first day of the month
         if self.markings[distance] == "freed" or self.markings[distance] == "free":
@@ -171,7 +160,23 @@ class MonthGreyer:
         return current_user_markings
 
     def get_choice_markings(self):  # ToDo: Compute the combined markings for all groups of the user.
-        group_blocked = generate_group_blocks(load_user_groups_users(self.user))
-        combined_markings = []
-        # 16.5 HS4 rechtsruck stoppen
-        return self.markings
+        # find all groups the user is in
+        with open("data/groups.json", "r") as file:
+            groups = json.load(file)
+
+        user_groups = []
+        for group in groups.keys():
+            if self.user in groups[group]["users"]:
+                user_groups.append(group)
+
+        group_markings_all_user_groups = [combine_group_markings(user_group) for user_group in user_groups]
+
+        priorities = ["past", "self_blocked", "blocked", "freed", "free"]
+
+        user_choice_markings = []
+        for day in zip(*(group_markings_all_user_groups + [self.markings])):
+            for priority in priorities:
+                if priority in day:
+                    user_choice_markings.append(priority)
+                    break
+        return user_choice_markings

@@ -45,7 +45,7 @@ async function mark_day(td) {
             return;
         default:
             // ToDo: Flash that td (table data cell) if the action is not allowed
-            console.log("Can't mark day " + distance)
+            console.log("Can't mark day with distance " + distance)
             return;
     }
 }
