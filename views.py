@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, jsonify, send_from_directory, redirect
 from MonthGreyer import MonthGreyer
 import os
+
 views = Blueprint(__name__, "views")
 
 
@@ -42,11 +43,11 @@ def de_grey_day(username, day_distance):
 
 @views.route('/user/<string:username>')
 def command(username=None):
-    # checking for existing user - might not exist yet
+    # checking for existing user (the file doe not contain the holiday "users")
     users = open("data/users.txt").read().splitlines()
 
-    if not username in users:
+    if username not in users:
         return "no user found"
-    
+
     calendar_data = MonthGreyer(username)
     return jsonify(calendar_data.get_choice_markings())
