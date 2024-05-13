@@ -114,14 +114,21 @@ async function calendarInit(month_range = 2) {
     // user specific settings button
     let settingsAnchor = document.createElement("a")
     settingsAnchor.id = "settingsAnchor"
+    settingsAnchor.setAttribute("class", "tooltip")
+
     let img = document.createElement("img")
     img.src="../static/cog_white.svg"
     img.alt="Settings"
     img.height="50"
     img.width="50"
     settingsAnchor.appendChild(img)
-    calendarContainer.appendChild(settingsAnchor)
 
+    let settingsTooltip = document.createElement("span")
+    settingsTooltip.setAttribute("class", "tooltiptext")
+    settingsTooltip.innerText = "Manage classes."
+    settingsAnchor.appendChild(settingsTooltip)
+
+    calendarContainer.appendChild(settingsAnchor)
 }
 
 // testing generation for multiple months
