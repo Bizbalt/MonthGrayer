@@ -23,6 +23,7 @@ function fade() {
 }
 
 let auto_fade_state = true; // default is faded
+let revert = false; // if fade in is triggered while fading out
 
 function auto_fade_in(container) {
   if (auto_fade_state === true) {
@@ -32,6 +33,10 @@ function auto_fade_in(container) {
     container.style.animation = "fade-in 1s forwards";
     auto_fade_state = false;
   }
+  else {
+    // if the fade out is still running while fade in is triggered stop the fade out
+    revert = true;
+  }
 }
 
 function auto_fade_out(container) {
@@ -40,8 +45,15 @@ function auto_fade_out(container) {
     container.style.animation = "fade-out 0.3s forwards";
     // hide container after animation
     setTimeout(function () {
+      if (revert){
+        container.style.display = "block";
+        container.style.animation = "fade-in 1s forwards";
+        revert = false;
+      }
+      else{
       container.style.display = "none";
       auto_fade_state = true;
+      }
     }, 300);
   }
 }
