@@ -87,10 +87,6 @@ def add_user_to_group(user, new_group):
     with open("data/groups.json", "w") as file:
         json.dump(groups, file, indent=1)
 
-# TODO: Do I want dictionaries for every Person and the group or maybe every group?
-#  a good idea rn seems to be users only and a group dic for the interface gets created when needed.
-#  Since I also sometimes need groups as combinations of groups for a user who is in multiple - like me :P
-
 
 class MonthGreyer:
     def __init__(self, current_user, month_range=2):

@@ -51,3 +51,8 @@ def command(username=None):
 
     calendar_data = MonthGreyer(username)
     return jsonify(calendar_data.get_choice_markings())
+
+
+@views.route("/settings/<string:username>")
+def settings(username):
+    return render_template("settings.html", username=username)

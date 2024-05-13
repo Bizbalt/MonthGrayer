@@ -56,7 +56,8 @@
 
 /* Initial state of the containers to fade in */
 .fade_div {
-    opacity: 20%;
+    display: none;
+    opacity: 0.0%;
   /* ToDo: set opacity to 0% later. Set visibility to none. Yet the 20% are just for debugging reasons
       display = none;
       opacity: 0%;

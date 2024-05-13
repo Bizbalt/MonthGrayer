@@ -33,6 +33,7 @@ async function check_user() {
         const markings = JSON.parse(responseText)
         if (fillCalendar(markings)) {
             auto_fade_in(document.getElementById("calendarContainer"))
+            document.getElementById("settingsAnchor").href = url + "/settings/" + user
         }
     }
 }

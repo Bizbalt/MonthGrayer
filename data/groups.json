@@ -1,20 +1,20 @@
 {
  "gruppenname": {
   "users": [
-   "Feiertage",
+   "holidays",
    "bob",
    "tim"
   ]
  },
  "gruppenname2": {
   "users": [
-   "Feiertage",
+   "holidays",
    "tim"
   ]
  },
  "gruppenname3": {
   "users": [
-   "Feiertage",
+   "holidays",
    "tim",
    "bob",
    "max"
@@ -22,14 +22,14 @@
  },
  "gruppenname4": {
   "users": [
-   "Feiertage",
+   "holidays",
    "tim",
    "bob"
   ]
  },
  "gruppenname5": {
   "users": [
-   "Feiertage",
+   "holidays",
    "bob"
   ]
  }

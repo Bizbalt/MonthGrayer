@@ -111,6 +111,16 @@ async function calendarInit(month_range = 2) {
         }
         calendarContainer.appendChild(calendar)
     }
+    // user specific settings button
+    let settingsAnchor = document.createElement("a")
+    settingsAnchor.id = "settingsAnchor"
+    let img = document.createElement("img")
+    img.src="../static/cog_white.svg"
+    img.alt="Settings"
+    img.height="50"
+    img.width="50"
+    settingsAnchor.appendChild(img)
+    calendarContainer.appendChild(settingsAnchor)
 
 }
 
@@ -142,7 +152,6 @@ function fillCalendar(markings) {
         return
     }
 
-    // ToDo: fill multiple months according to range
     const calendarContainer = document.getElementById("calendarContainer")
     // initialize a calendar table list
     const calendarTables = Array()
@@ -159,11 +168,9 @@ function fillCalendar(markings) {
                 if (isNaN(td.innerText) || (td.innerText === "")) { // check if the day is not an day element
                     continue
                 }
-                const day = td.innerText
                 const distance = td.distance = day_distance // day is the distance from the first day of the month.
                 day_distance++
                     td.setAttribute("class", markings[distance])
-
             }
         }
     }
