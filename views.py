@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, jsonify, send_from_directory, redirect
-from MonthGreyer import MonthGreyer
+from MonthGreyer import MonthGreyer, get_settings_page
 import os
 
 views = Blueprint(__name__, "views")
@@ -56,3 +56,8 @@ def command(username=None):
 @views.route("/settings/<string:username>")
 def settings(username):
     return render_template("settings.html", username=username)
+
+
+@views.route("/user_group_settings/<string:username>")
+def user_group_settings(username):
+    return jsonify(get_settings_page(username))

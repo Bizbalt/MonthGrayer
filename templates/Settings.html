@@ -3,15 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Settings page</title>
+    <script type="text/javascript" src="../static/user_settings.js"></script>
 </head>
-<body style="background: #2b2b2c;color:white;font-family:verdana,serif">
+<body onload=settings_init() style="background: #2b2b2c;color:white;font-family:verdana,serif">
+
 <p style="text-align:center">
     This is the Settings Side.<br>
-    Here you can manage groups.
+    Here you can manage groups for the user {{ username }}.
     <br>
-    <a href="/MonthGreyer" >Go back to the main page</a>
+    <a href="/" >Go back to the main page</a>
 
 </p>
+<script>
+current_username = "{{username}}";
+</script>
+
+<div style="text-align: center" id="group_settings_container">
+{# here the groups to choose or create will be generated #}
+</div>
 
 </body>
 </html>

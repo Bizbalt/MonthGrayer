@@ -56,10 +56,21 @@ def date_range(start, end):
     return days
 
 
-def combine_group_markings(group):
+def get_groups():
     with open("data/groups.json", "r") as file:
         groups = json.load(file)
+    return groups
 
+
+def get_settings_page(user):
+    groups = get_groups()
+    user_groups = MonthGreyer(user).find_user_groups()
+    user_group_dic = {group: "true" if group in user_groups else "false" for group in groups.keys()}
+    return user_group_dic
+
+
+def combine_group_markings(group):
+    groups = get_groups()
     # get all the markings per user
     user_markings = [MonthGreyer(user).markings for user in groups[group]["users"]]
 
@@ -76,8 +87,7 @@ def combine_group_markings(group):
 
 
 def add_user_to_group(user, new_group):
-    with open("data/groups.json", "r") as file:
-        groups = json.load(file)
+    groups = get_groups()
     if new_group not in groups:
         groups[new_group] = {"users": [user]}  # create new group with user
     elif user in groups[new_group]["users"]:
@@ -155,16 +165,18 @@ class MonthGreyer:
             current_user_markings.append(markings[str(day)] if str(day) in markings else "free")
         return current_user_markings
 
-    def get_choice_markings(self):  # ToDo: Compute the combined markings for all groups of the user.
+    def find_user_groups(self):
         # find all groups the user is in
-        with open("data/groups.json", "r") as file:
-            groups = json.load(file)
+        groups = get_groups()
 
         user_groups = []
         for group in groups.keys():
             if self.user in groups[group]["users"]:
                 user_groups.append(group)
+        return user_groups
 
+    def get_choice_markings(self):
+        user_groups = self.find_user_groups()
         group_markings_all_user_groups = [combine_group_markings(user_group) for user_group in user_groups]
 
         priorities = ["past", "self_blocked", "blocked", "freed", "free"]
