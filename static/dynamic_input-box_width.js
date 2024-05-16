@@ -24,5 +24,5 @@ function getWidthOfInput(event) {
     document.body.removeChild(tmp)
 
     // add buffer to not look cramped, also minimum width
-    return Math.max(width + 40, 300)
+    return Math.max(width + 40, 250)
 }

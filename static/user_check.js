@@ -2,10 +2,12 @@ let current_user = ""
 let create_user_opportunity = -1
 async function check_user() {
     let btn = document.getElementById("create_user");
+    let info_text = document.getElementById("create_user_info");
     create_user_opportunity = -1
     const user = document.getElementById("current_user").value.replace(/ /g, "")
     if (user === current_user) { // refrain from loading the same user again
         btn.style.display = "none";
+        info_text.style.display = "none";
         return
     }
     if (user === "") { // catch empty input
@@ -28,6 +30,7 @@ async function check_user() {
     }
     else {
         btn.style.display = "none";
+        info_text.style.display = "none";
         current_user = user.replace(/ /g, "")
         // change the type of the responseText from string to json
         const markings = JSON.parse(responseText)
@@ -45,6 +48,9 @@ async function offer_new_user() {
         if (create_user_opportunity === 0) {
             let btn = document.getElementById("create_user");
             btn.style.display = "inline";
+            let info_text = document.getElementById("create_user_info");
+            info_text.style.display = "block";
+            current_user = document.getElementById("current_user").value.replace(/ /g, "")
         }
     }
 }

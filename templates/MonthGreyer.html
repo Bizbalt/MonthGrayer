@@ -3,7 +3,8 @@
 
 <head>
     <title>Month Greyer</title>
-    <link rel="stylesheet" type="text/css" href="../static/monthGreyer.css">
+    <link rel="stylesheet" type="text/css" href="../static/monthGreyer.css"/>
+    <link rel="stylesheet" type="text/css" href="../static/style.css"/>
 
     <script>
         // ToDo: autosave: The user dictionary is updated on every click, albeit the "finished vote" status is found when he closes the page or goes to another tab in his browser for a certain time (10 seconds?).
@@ -14,7 +15,6 @@
     <script type="text/javascript" src="../static/user_check.js"></script>
     <script type="text/javascript" src="../static/user_settings.js"></script>
     <script type="text/javascript" src="../static/dynamic_input-box_width.js"></script>
-    <link href="../static/style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body onload="calendarInit()">
@@ -27,10 +27,16 @@
         onkeydown="this.style.width = getWidthOfInput(event) + 'px'" onkeyup="check_user()">
 
     <br>
-    <button type="button" id="create_user" onclick="create_user(current_user)" style="display: none">I shouldn't be
+    <button type="button" id="create_user" onclick="goto_user_page(current_user)" style="display: none">I shouldn't be
         visible.</button>
-
-
+    <p style="display: none; width: 60%" id="create_user_info">Please specialise your username so no double entries are made: <br>
+        e.g.: Johannes &#8594; Johannes (Mathemagier) or Krarilotus. <br>
+        Your username is almost already like your password to your vote.<br>
+        <span style="font-size: x-small">
+            The alternative would be to ask you for passwords or store your IP address in combination -_-'<br></span>
+        <span style="font-size: xx-small">
+            I also might not be able to recognise Conqueeftador420 as your gamertag if that's your access ¯\_(ツ)_/¯</span>
+    </p>
 
     <div class="fade_div" id="calendarContainer">
         {#here the calendar and headers will be placed#}

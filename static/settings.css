@@ -1,0 +1,12 @@
+.group_settings_container {
+    width: fit-content;
+    margin: 0 auto; /* Center the container horizontally */
+    /*border: 1px solid #ccc; !* Just for visualization *!*/
+    padding: 10px;
+    text-align: left;
+}
+
+.group_div {
+    display: block;
+    margin: 0.5rem;
+}

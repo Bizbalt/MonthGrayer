@@ -19,6 +19,14 @@ h1 {
   font-family: "Arial Black", serif;
 }
 
+p {
+  margin: auto;
+  text-align: center;
+  font-size: 20px;
+  color: white;
+  font-family: "Arial Black", serif;
+}
+
 button {
   background-color: #396ea2;
   margin: 5px;
@@ -28,6 +36,12 @@ button {
   color: #000000;
   font-weight: bold;
   cursor: pointer;
+}
+
+/* Initial state of the containers to fade in */
+.fade_div {
+    display: none;
+    opacity: 0.0%;
 }
 
 /*the fade animations*/

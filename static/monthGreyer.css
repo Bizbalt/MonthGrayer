@@ -54,12 +54,6 @@
     margin-top: 10px;
 }
 
-/* Initial state of the containers to fade in */
-.fade_div {
-    display: none;
-    opacity: 0.0%;
-}
-
 .tooltip {
     position: relative;
     display: inline-block;
