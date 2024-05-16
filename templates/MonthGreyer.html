@@ -7,6 +7,7 @@
 
     <script>
         // ToDo: autosave: The user dictionary is updated on every click, albeit the "finished vote" status is found when he closes the page or goes to another tab in his browser for a certain time (10 seconds?).
+        // ToDo: create a one-time invitational-code-landing page to directly join a group with your existing username or a new one or a one-time username. (optional counting for the amount of participants expected)
     </script>
     <script type="text/javascript" src="../static/calendar.js"></script>
     <script type="text/javascript" src="../static/fade_script.js"></script>
@@ -21,7 +22,7 @@
         Month Greyer
     </h1>
 
-    <input type="text" id="current_user" style="text-align: center; font-size: 16px;" autofocus="autofocus"
+    <input type="text" id="current_user" style="text-align: center; font-size: 16px; width:300px" autofocus="autofocus"
         placeholder="... Name, Nick, Initials, Pseudonym ..."
         onkeydown="this.style.width = getWidthOfInput(event) + 'px'" onkeyup="check_user()">
 
