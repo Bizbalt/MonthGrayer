@@ -7,7 +7,7 @@ function goto_user_page(username) {
 
 async function update_user_groups(group, tick){
     let success
-    success = await (await fetch(`/user_group_set/${current_user}/${group}/${tick}`)).text() === "True"
+    success = await (await fetch(`/user_group_set/${current_username}/${group}/${tick}`)).text() === "True"
     if (success===false) {
         console.log("Failed to update user group")
     }
