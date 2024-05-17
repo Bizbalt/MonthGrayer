@@ -5,13 +5,13 @@ async function check_user() {
     let info_text = document.getElementById("create_user_info");
     create_user_opportunity = -1
     const user = document.getElementById("current_user").value.replace(/ /g, "")
-    if (user === current_user) { // refrain from loading the same user again
-        btn.style.display = "none";
-        info_text.style.display = "none";
+    if (user === current_user) { // refrain from loading the same user again (this function is called on keyup by now)
         return
     }
     if (user === "") { // catch empty input
         auto_fade_out(document.getElementById("calendarContainer"))
+        btn.style.display = "none";
+        info_text.style.display = "none";
         return
     }
     const response = await fetch(url + `/user/${user}`)
@@ -21,7 +21,7 @@ async function check_user() {
     if (responseText === "no user found" || responseText === "") {
         auto_fade_out(document.getElementById("calendarContainer"))
         if (responseText === "no user found") {
-            // prepare buttontext for possible incoming user creation prompt
+            // prepare button text for possible incoming user creation prompt
             btn.innerHTML = "Create new user " + user + "?";
             current_user = "" // clear out possible previous different user on same client
             create_user_opportunity = 3 // timer
