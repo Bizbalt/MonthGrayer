@@ -119,8 +119,8 @@ async function calendarInit(month_range = 2) {
     let img = document.createElement("img")
     img.src="../static/cog_white.svg"
     img.alt="Settings"
-    img.height="50"
-    img.width="50"
+    img.height=50
+    img.width=50
     settingsAnchor.appendChild(img)
 
     let settingsTooltip = document.createElement("span")
@@ -168,9 +168,9 @@ function fillCalendar(markings) {
             calendarTables.push(element)
         }
     }
-    for (ct of calendarTables) {
-        for (tr of ct.children) {
-            for (td of tr.children) {
+    for (const ct of calendarTables) {
+        for (const tr of ct.children) {
+            for (const td of tr.children) {
                 // check if the inner text is a number
                 if (isNaN(td.innerText) || (td.innerText === "")) { // check if the day is not an day element
                     continue
