@@ -86,6 +86,16 @@ def combine_group_markings(group):
     return combined_markings
 
 
+def create_new_user(username):
+    users = open("data/users.txt").read().splitlines()
+    open("data/users.txt", "w").writelines("\n".join(users+[username]))
+
+    # save new empty username json
+    empty_json = {}
+    with open("data/" + username + ".json", "x") as file:
+        json.dump(empty_json, file, indent=1)
+
+
 def add_user_to_group(user, new_group):
     groups = get_groups()
     if new_group not in groups:
