@@ -5,11 +5,14 @@ function goto_user_page(username) {
     location.href = "/settings/" + username
 }
 
-async function update_user_groups(group, tick){
+async function update_user_groups(group){
     let success
-    success = await (await fetch(`/user_group_set/${current_username}/${group}/${tick}`)).text() === "True"
-    if (success===false) {
+    success = await (await fetch(`/user_group_update/${current_username}/${group}`)).text() === "True"
+    if (success==="") {
         console.log("Failed to update user group")
+    }
+    else{
+    //    ToDo: log the change with a popup e.g. "add user Gruppenname1
     }
 }
 
@@ -32,11 +35,7 @@ async function settings_init(){
         const checkbox_label = document.createElement("label")
         checkbox_label.innerText = group
         checkbox.addEventListener("change", () => {
-            if (checkbox_label.checked) {
-                update_user_groups(group, true)
-            } else {
-                update_user_groups(group, false)
-            }
+            update_user_groups(group)
         });
 
         const group_div = document.createElement("div")
@@ -77,6 +76,7 @@ async function settings_init(){
         if (new_group_checkbox.checked) {
             new_group_name.value = ""
             auto_fade_in(new_group_fade_div)
+            // ToDo: add in possibility to update_user_groups on create_group_button
         } else {
             auto_fade_out(new_group_fade_div)
         }

@@ -96,16 +96,22 @@ def create_new_user(username):
         json.dump(empty_json, file, indent=1)
 
 
-def add_user_to_group(user, new_group):
+def update_user_group(user, group):
     groups = get_groups()
-    if new_group not in groups:
-        groups[new_group] = {"users": [user]}  # create new group with user
-    elif user in groups[new_group]["users"]:
-        raise ValueError("User already in group")
+    if group not in groups:
+        groups[group] = {"users": [user]}  # create new group with user
+        state = "added user to " + group
+    elif user in groups[group]["users"]:
+        groups[group]["users"].remove(user)  # removing existing user
+        state = "removed user from " + group
     else:
-        groups[new_group]["users"].append(user)
+        groups[group]["users"].append(user)  # adding user
+        state = "added user to " + group
+
     with open("data/groups.json", "w") as file:
         json.dump(groups, file, indent=1)
+
+    return state
 
 
 class MonthGreyer:
