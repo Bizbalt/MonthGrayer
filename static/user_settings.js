@@ -69,14 +69,15 @@ async function settings_init(){
 
     const create_button = document.createElement("button")
     create_button.innerText = "Create Group"
-    create_button.addEventListener("click", new_group)
+    create_button.addEventListener("click", () => {
+     new_group(new_group_name.value);
+    })
     new_group_fade_div.appendChild(create_button)
 
     new_group_checkbox.addEventListener("change", () => {
         if (new_group_checkbox.checked) {
             new_group_name.value = ""
             auto_fade_in(new_group_fade_div)
-            // ToDo: add in possibility to update_user_groups on create_group_button
         } else {
             auto_fade_out(new_group_fade_div)
         }
@@ -87,8 +88,7 @@ async function settings_init(){
 }
 
 async function new_group(group_name){
-    // ToDo: create a new group call to py
-
+    await update_user_groups(group_name)
     // refresh at the end
     goto_user_page(current_username)
 }
