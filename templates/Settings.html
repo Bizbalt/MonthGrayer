@@ -11,16 +11,25 @@
 <script>current_username = "{{username}}";</script>
 <body onload=settings_init() style="background: #2b2b2c;color:white;font-family:verdana,serif">
 
-<p style="text-align:center">
+<p style="text-align:center; background-color: transparent">
     This is the Settings Page.<br>
     Here you can manage groups for the user {{ username }}.
     <br>
     <a href="/" >Go back to the main page</a>
-
 </p>
 
-<div class="group_settings_container" id="groupSettingsContainer">
+<div id="wrapper">
+<p  style="float: left; padding: 1rem; background-color: black">
+    <span style="font-size: large; text-decoration: underline">Legend:</span> <br>
+    <span style="color: #033519">Free</span> <br>
+    <span style="color: #554f13">Freed</span> <br>
+    <span style="color: #545454">Blocked</span> <br>
+    <span style="color: grey">Self blocked</span> <br>
+    <span style="color: #2b2b2c">Past</span> <br>
+
+<div class="group_settings_container" id="groupSettingsContainer" style="float: right">
 {# here the groups to choose or create will be generated #}
+</div>
 </div>
 
 </body>

@@ -10,3 +10,12 @@
     display: block;
     margin: 0.5rem;
 }
+
+#wrapper {
+    margin: auto;
+    display: flex;
+    width: 50%;
+    padding: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}

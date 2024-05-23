@@ -74,6 +74,8 @@ async function settings_init(){
     })
     new_group_fade_div.appendChild(create_button)
 
+    // ToDo: Create an additional tick boxes to create a respective default user highlighting holidays/blocking all weekdays etc.
+
     new_group_checkbox.addEventListener("change", () => {
         if (new_group_checkbox.checked) {
             new_group_name.value = ""
