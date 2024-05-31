@@ -74,7 +74,32 @@ async function settings_init(){
     })
     new_group_fade_div.appendChild(create_button)
 
-    // ToDo: Create an additional tick boxes to create a respective default user highlighting holidays/blocking all weekdays etc.
+    // additional tick boxes to create group settings like highlighting holidays/blocking all weekdays etc.
+    const header = document.createElement("header")
+    header.innerText = "Weekdays blocked by default:"
+    header.style.padding = "10px"
+    const default_signed_days_div = document.createElement("div")
+    const group_options_list = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    default_signed_days_div.style.display = "flex"
+    default_signed_days_div.style.justifyContent = "center"
+
+    // I want to align the options beside each other this time
+    for (let opt = 0; opt < group_options_list.length; opt++) {
+        const group_defaults_div = document.createElement("div")
+        const checkbox = document.createElement("input")
+        checkbox.setAttribute("type", "checkbox")
+        checkbox.setAttribute("id", group_options_list[opt])
+        const checkbox_label = document.createElement("label")
+        checkbox_label.innerText = group_options_list[opt]
+        group_defaults_div.style.padding = ".5rem"
+        group_defaults_div.appendChild(checkbox)
+        group_defaults_div.appendChild(checkbox_label)
+
+        default_signed_days_div.appendChild(group_defaults_div)
+    }
+    new_group_fade_div.appendChild(header)
+    new_group_fade_div.appendChild(default_signed_days_div)
+
 
     new_group_checkbox.addEventListener("change", () => {
         if (new_group_checkbox.checked) {
