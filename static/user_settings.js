@@ -1,6 +1,7 @@
 // ToDo: This file is going to contain the functions to the calls for creating a user, and changing their groups and other settings.
 // ToDo: modify existing groups
 let current_username = "";
+const group_options_list = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 function goto_user_page(username) {
     location.href = "/settings/" + username
 }
@@ -79,7 +80,6 @@ async function settings_init(){
     header.innerText = "Weekdays blocked by default:"
     header.style.padding = "10px"
     const default_signed_days_div = document.createElement("div")
-    const group_options_list = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     default_signed_days_div.style.display = "flex"
     default_signed_days_div.style.justifyContent = "center"
 
@@ -115,7 +115,26 @@ async function settings_init(){
 }
 
 async function new_group(group_name){
+    // create the new group
     await update_user_groups(group_name)
+    // set the days blocked by default
+    let defaults_list = []
+    for (let opt = 0; opt < group_options_list.length; opt++){
+        let state = (document.getElementById(group_options_list[opt]).checked)
+        if (state){state = 1}
+        else {state = 0}
+        defaults_list[opt] = state
+    }
+    // convert boolean to binary string
+    let result
+    result = await (await fetch(`/user_group_default/${defaults_list.join("")}/${group_name}`)).text()
+    if (result==="") {
+        console.log("something went wrong setting the default days")
+    }
+    else{
+        console.log(result)
+    // ToDo: log the change with a popup e.g. "add user Gruppenname1
+    }
     // refresh at the end
     goto_user_page(current_username)
 }

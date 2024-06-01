@@ -82,7 +82,7 @@ def combine_group_markings(group):
             if priority in day:
                 combined_markings.append(priorities[priority])
                 break
-
+    # ToDo: insert defaults here. Find the dates for all days that fit the defaults-mask
     return combined_markings
 
 
@@ -100,7 +100,7 @@ def update_user_group(user, group):
     groups = get_groups()
     if group not in groups:
         groups[group] = {"users": [user]}  # create new group with user
-        state = "added user to " + group
+        state = "added user to new " + group
     elif user in groups[group]["users"]:
         groups[group]["users"].remove(user)  # removing existing user
         state = "removed user from " + group
@@ -111,6 +111,18 @@ def update_user_group(user, group):
     with open("data/groups.json", "w") as file:
         json.dump(groups, file, indent=1)
 
+    return state
+
+
+def update_group_defaults(defaults, group):
+    groups = get_groups()
+    if group not in groups:
+        state = "group for setting defaults does not exist"
+    else:
+        groups[group]["defaults"] = defaults
+        state = "updated defaults for " + group
+        with open("data/groups.json", "w") as file:
+            json.dump(groups, file, indent=1)
     return state
 
 

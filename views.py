@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, jsonify, send_from_directory, redirect
-from MonthGreyer import MonthGreyer, get_settings_page, create_new_user, update_user_group
+from MonthGreyer import MonthGreyer, get_settings_page, create_new_user, update_user_group, update_group_defaults
 import os
 
 views = Blueprint(__name__, "views")
@@ -73,4 +73,10 @@ def user_group_settings(username):
 @views.route("/user_group_update/<string:username>/<string:group>")
 def user_group_update(username, group):
     state = update_user_group(username, group)
+    return state
+
+
+@views.route("/user_group_default/<string:defaults>/<string:group>")
+def user_group_defaults(defaults, group):
+    state = update_group_defaults(defaults, group)
     return state
