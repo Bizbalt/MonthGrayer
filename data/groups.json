@@ -16,8 +16,7 @@
   "users": [
    "holidays",
    "tim",
-   "bob",
-   "max"
+   "bob"
   ]
  },
  "gruppenname4": {
@@ -32,5 +31,11 @@
    "holidays",
    "bob"
   ]
+ },
+ "testgrmowed fr Sun": {
+  "users": [
+   "max"
+  ],
+  "defaults": "1010101"
  }
 }

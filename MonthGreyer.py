@@ -69,7 +69,7 @@ def get_settings_page(user):
     return user_group_dic
 
 
-def combine_group_markings(group):
+def combine_group_markings(group, current_dates):
     groups = get_groups()
     # get all the markings per user
     user_markings = [MonthGreyer(user).markings for user in groups[group]["users"]]
@@ -82,7 +82,13 @@ def combine_group_markings(group):
             if priority in day:
                 combined_markings.append(priorities[priority])
                 break
-    # ToDo: insert defaults here. Find the dates for all days that fit the defaults-mask
+
+    # find all nth days of the week to apply the defaults mask
+    if "defaults" in groups[group]:
+        defaults_mask = [i for i in range(7) if groups[group]["defaults"][i] == "1"]
+        for day, mark_idx in zip(current_dates, range(len(combined_markings))):
+            if day.weekday() in defaults_mask:
+                combined_markings[mark_idx] = "blocked"
     return combined_markings
 
 
@@ -205,14 +211,19 @@ class MonthGreyer:
 
     def get_choice_markings(self):
         user_groups = self.find_user_groups()
-        group_markings_all_user_groups = [combine_group_markings(user_group) for user_group in user_groups]
+        group_markings_all_user_groups = [combine_group_markings(user_group, self.current_dates) for user_group in user_groups]
 
-        priorities = ["past", "self_blocked", "blocked", "freed", "free"]
+        # get the combined markings for user and groups for the choice/to be selected days
+        priorities = ["past", "self_blocked", "free", "freed", "blocked"]
 
         user_choice_markings = []
-        for day in zip(*(group_markings_all_user_groups + [self.markings])):
-            for priority in priorities:
-                if priority in day:
-                    user_choice_markings.append(priority)
-                    break
+        for user_marks, *day in zip(*([self.markings] + group_markings_all_user_groups)):
+            # if any of the groups has a "free", marking are free unless the user grayed out
+            if user_marks == "self_blocked":
+                user_choice_markings.append("self_blocked")
+            else:
+                for priority in priorities:
+                    if priority in day:
+                        user_choice_markings.append(priority)
+                        break
         return user_choice_markings
