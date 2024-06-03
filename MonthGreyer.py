@@ -136,6 +136,15 @@ def update_group_defaults(defaults, group):
     return state
 
 
+def update_group_user_views(user):
+    groups = get_groups()
+    user_groups = MonthGreyer(user).find_user_groups()
+    for group in user_groups:
+        groups[group]["views"][user] = date.today()
+    state = "user view updated"
+    return state
+
+
 class MonthGreyer:
     def __init__(self, current_user, month_range=2):
         # ToDo: add user to group as seen (today.month + m_range)
