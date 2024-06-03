@@ -4,6 +4,10 @@ import os
 
 views = Blueprint(__name__, "views")
 
+# ToDo include communities e.g.
+# community = "Lazinth"
+# @views.route(community + '/favicon.ico')
+
 
 @views.route('/favicon.ico')
 def favicon():

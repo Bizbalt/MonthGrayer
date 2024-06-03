@@ -1,4 +1,4 @@
-const url = this.location.origin + "/"
+const url = window.location.origin + "/"
 
 const CELL_STATE = {
     free: "free",

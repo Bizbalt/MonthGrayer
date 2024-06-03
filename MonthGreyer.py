@@ -215,6 +215,8 @@ class MonthGreyer:
 
     def get_choice_markings(self):
         user_groups = self.find_user_groups()
+        if not user_groups:  # catch users which are in no groups yet/anymore
+            return self.markings
         group_markings_all_user_groups = [combine_group_markings(user_group, self.current_dates) for user_group in user_groups]
 
         # get the combined markings for user and groups for the choice/to be selected days
