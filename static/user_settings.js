@@ -1,16 +1,19 @@
 let current_username = "";
 const group_options_list = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-function goto_user_page(username) {
+function goto_user_page(username=current_username) {
     location.href = "/settings/" + username
 }
 
 async function update_user_groups(group){
     let success
-    success = await (await fetch(`/user_group_update/${current_username}/${group}`)).text() === "True"
+    success = await (await fetch(`/user_group_update/${current_username}/${group}`)).text()
     if (success==="") {
         console.log("Failed to update user group")
     }
     else{
+        if(success.includes("removed group"))
+            goto_user_page()
+        console.log(success)
     //    ToDo: log the change with a popup e.g. "add user Gruppenname1
     }
 }

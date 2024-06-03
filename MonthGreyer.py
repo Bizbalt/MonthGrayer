@@ -106,10 +106,14 @@ def update_user_group(user, group):
     groups = get_groups()
     if group not in groups:
         groups[group] = {"users": [user]}  # create new group with user
-        state = "added user to new " + group
+        state = "added user to new group " + group
     elif user in groups[group]["users"]:
         groups[group]["users"].remove(user)  # removing existing user
-        state = "removed user from " + group
+        if not groups[group]["users"]:  # if the user removed was the last user
+            groups.pop(group)
+            state = "removed group " + group
+        else:
+            state = "removed user from " + group
     else:
         groups[group]["users"].append(user)  # adding user
         state = "added user to " + group
