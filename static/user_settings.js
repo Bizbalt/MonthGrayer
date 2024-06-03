@@ -1,5 +1,3 @@
-// ToDo: This file is going to contain the functions to the calls for creating a user, and changing their groups and other settings.
-// ToDo: modify existing groups
 let current_username = "";
 const group_options_list = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 function goto_user_page(username) {
@@ -47,7 +45,7 @@ async function settings_init(){
         group_container.appendChild(group_div)
     }
 
-    // create new group option
+    // create new (or manage) group option
     const new_group_checkbox = document.createElement("input")
     new_group_checkbox.setAttribute("type", "checkbox")
     new_group_checkbox.setAttribute("id", "new_group")
