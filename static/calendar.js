@@ -44,8 +44,7 @@ async function mark_day(td) {
             }
             return;
         default:
-            // ToDo: Flash that td (table data cell) if the action is not allowed
-            console.log("Can't mark day with distance " + distance)
+            console.log("Can't mark day with distance " + distance);
             return;
     }
 }
@@ -117,7 +116,7 @@ async function calendarInit(month_range = 2) {
     settingsAnchor.setAttribute("class", "tooltip")
 
     let img = document.createElement("img")
-    img.src="../static/cog_white.svg"
+    img.src="../static/images/cog_white.svg"
     img.alt="Settings"
     img.height=50
     img.width=50

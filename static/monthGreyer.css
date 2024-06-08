@@ -26,7 +26,7 @@
 }
 
 .free {
-    background-color: #033519;
+    background-color: #004f23;
 }
 
 .freed {
@@ -40,11 +40,28 @@
 
 .self_blocked {
     background-color: grey;
+    /*background-image: url("./images/broken.png"); ToDo: that looks like shit*/
+    /*background-size: cover;*/
 }
 
 .past {
     cursor: default !important;
     background-color: transparent;
+}
+
+.free:hover{
+    animation: shake 0.5s;
+    animation-iteration-count: infinite;
+}
+
+.freed:hover{
+    animation: shake 0.5s;
+    animation-iteration-count: infinite;
+}
+
+.self_blocked:hover{
+    animation: shake 0.5s;
+    animation-iteration-count: infinite;
 }
 
 .h2 {

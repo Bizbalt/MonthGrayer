@@ -4,14 +4,10 @@ import os
 
 views = Blueprint(__name__, "views")
 
-# ToDo include communities e.g.
-# community = "Lazinth"
-# @views.route(community + '/favicon.ico')
-
 
 @views.route('/favicon.ico')
 def favicon():
-    return send_from_directory(os.path.join(views.root_path, 'static'), 'favicon_dark.ico')
+    return send_from_directory(os.path.join(views.root_path, 'static/images'), 'favicon_dark.ico')
 
 
 @views.route("/")
