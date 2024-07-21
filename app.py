@@ -4,8 +4,8 @@ from views import views
 # instantiate the app
 app = Flask(__name__)
 
-# ToDo include communities e.g.
-# community = "Lazinth"
+# ToDo include communities e.g. (probably via subdomains)
+# community = "1337"
 # app.register_blueprint(views, url_prefix="/" + community)
 app.register_blueprint(views, url_prefix="/")
 
