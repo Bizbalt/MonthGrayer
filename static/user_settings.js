@@ -4,6 +4,16 @@ function goto_user_page(username=current_username) {
     location.href = "/settings/" + username
 }
 
+async function show_change(change) {
+    let dummy_div = document.getElementById("wrapper")
+    let infobox = document.createElement("span")
+    infobox.setAttribute("class", "info_popup")
+    infobox.innerText = change
+    dummy_div.appendChild(infobox)
+    await new Promise(r => setTimeout(r, 1800))
+    infobox.remove()
+}
+
 async function update_user_groups(group){
     let success
     success = await (await fetch(`/user_group_update/${current_username}/${group}`)).text()
@@ -14,7 +24,7 @@ async function update_user_groups(group){
         if(success.includes("removed group"))
             goto_user_page()
         console.log(success)
-    //    ToDo: log the change with a popup e.g. "add user Gruppenname1
+        await show_change(success)
     }
 }
 
@@ -134,7 +144,7 @@ async function new_group(group_name){
     }
     else{
         console.log(result)
-    // ToDo: log the change with a popup e.g. "add user Gruppenname1
+    await show_change(result)
     }
     // refresh at the end
     goto_user_page(current_username)
