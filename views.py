@@ -80,3 +80,8 @@ def user_group_update(username, group):
 def user_group_defaults(defaults, group):
     state = update_group_defaults(defaults, group)
     return state
+
+
+@views.route("/impressum")
+def impressum():
+    return render_template("Impressum.html")
