@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, jsonify, send_from_directory, redirect
-from MonthGreyer import MonthGreyer, get_settings_page, create_new_user, update_user_group, update_group_defaults
+from MonthGreyer import MonthGreyer, get_settings_page, create_new_user, update_user_group, update_group_defaults, communities
 import os
 
 views = Blueprint(__name__, "views")
@@ -8,6 +8,11 @@ views = Blueprint(__name__, "views")
 @views.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(views.root_path, 'static/images'), 'favicon_dark.ico')
+
+
+@views.route("/impressum")
+def impressum():
+    return render_template("Impressum.html")
 
 
 @views.route("/")
@@ -80,8 +85,3 @@ def user_group_update(username, group):
 def user_group_defaults(defaults, group):
     state = update_group_defaults(defaults, group)
     return state
-
-
-@views.route("/impressum")
-def impressum():
-    return render_template("Impressum.html")

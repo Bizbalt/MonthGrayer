@@ -1,10 +1,13 @@
 import calendar
+import csv
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 import locale
 import json
 # for German locale
 locale.setlocale(locale.LC_TIME, "de_DE.utf8")
+with open("data/communities.txt", "r") as file:
+    communities = file.read().splitlines()
 
 '''
 An alternative Doodle in which you cross-out on which days you are not available (on default, if you can only on a few
