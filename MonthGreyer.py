@@ -25,7 +25,7 @@ Maybe let the users vote over this what they prefer. Collect their answer + ~~ip
 
 I need a file format: array  for each day: 0-grey, "none"-green, 2 orange. Every days "number" should also have none or 
  the respective changer so one can see what he changed only. So I actually need a fourth color 1-light_grey so the
-  person which greyed it can see that he can ungrey it.
+  person which greyed it can see that he can un-grey it.
 Storing wise the greying of persons should be stored and if not applicable, the greying
  for the "group"-account. Then on load the overall greying should be computed out of those. 
 
@@ -35,7 +35,7 @@ Standard look should be dark, so I better go inspired by the Dracula theme with 
 the program should notice which day the last day was, everybody has seen, and then check if in the time from now to
  this specific last shared date any dates exist where everybody has time. 
  
-The automatic storage of votes on blur/close of the Tab should be done in the REST architectural style like adviced by 
+The automatic storage of votes on blur/close of the Tab should be done in the REST architectural style like advised by 
  Minutenreis.
 Alike the transfer of data from front-end to back-end and vice versa should be in the same fashion and flexible:
     Only an arbitrary length (month-wise (e.g. 30, 61, 91, ...)) of dates is sent, the starting point is always current times month. 
@@ -139,13 +139,38 @@ def update_group_defaults(defaults, group):
     return state
 
 
-def update_group_user_views(user):
+# ToDo: create events for group views update in case of timeouts which can be terminated.
+
+
+def update_group_user_views(user, polling_state, timeout=timedelta(days=1)):
+    """
+    Update the view for the groups of the users after a timeout is reached or if the user ended the polling
+    :param user:
+        The user to update the views for
+    :param polling_state:
+        describes the polling case the user is in
+    :param timeout:
+        The time to wait until the view update will be forced
+    :return:
+        None
+    """
+
+    match polling_state:
+        case "blur":
+            # if the user actively lost focus to the Calendar
+            print("User lost focus")
+        case "beforeunload":
+            # if the tab or browser is closed by the user
+            print("User closed poll")
+
+        # if the user started the polling start a timer for the view to be updated
+        # if the user finishes the polling within the time the timer will be canceled and the view updated
+        # ToDo: create timeout event via ¿treading.Timer?
+    return "User views updated"
     groups = get_groups()
     user_groups = MonthGreyer(user).find_user_groups()
     for group in user_groups:
         groups[group]["views"][user] = date.today()
-    state = "user view updated"
-    return state
 
 
 class MonthGreyer:
