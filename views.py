@@ -1,5 +1,6 @@
+import json
 from flask import Blueprint, render_template, jsonify, send_from_directory, redirect
-from MonthGreyer import MonthGreyer, get_settings_page, create_new_user, update_user_group, update_group_defaults, update_group_user_views, communities
+from MonthGreyer import MonthGreyer, get_settings_page, create_new_user, update_user_group, update_group_defaults, eval_polling_state, communities
 import os
 
 views = Blueprint(__name__, "views")
@@ -48,8 +49,7 @@ def de_grey_day(username, day_distance):
 
 def check_user_exist(username):
     # checking for existing user (the file does not contain the holiday "users")
-    users = open("data/users.txt").read().splitlines()
-
+    users = json.load(open("data/users.json"))
     if username not in users:
         return False
     return True
@@ -87,8 +87,8 @@ def user_group_defaults(defaults, group):
     return state
 
 
-@views.route("/set_seen_state/<string:username>/<string:polling_state>")
-def set_seen_state(username, polling_state):
-    state = update_group_user_views(username, polling_state)
+@views.route("/polling_state/<string:username>/<string:polling_state>")
+def polling_state(username, polling_state):
+    state = eval_polling_state(username, polling_state)
     return state
 

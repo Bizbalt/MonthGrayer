@@ -9,6 +9,6 @@ function rid_blur_and_set_seen_state(event) { // on unload the blur event is tri
 }
 function set_seen_state(event) {
     if (auto_fade_state === false) { // if the calendar is visible the user is viable and has seen it
-        fetch(`set_seen_state/${current_user}/${event.type}`).then(r => {})//.then(response => response.text());
+        fetch(`polling_state/${current_user}/${event.type}`).then(r => {})//.then(response => response.text());
     }
 }

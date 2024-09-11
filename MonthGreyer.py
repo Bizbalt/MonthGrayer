@@ -9,6 +9,8 @@ locale.setlocale(locale.LC_TIME, "de_DE.utf8")
 with open("data/communities.txt", "r") as file:
     communities = file.read().splitlines()
 
+MONTH_RANGE = 2
+
 '''
 An alternative Doodle in which you cross-out on which days you are not available (on default, if you can only on a few
  days "greening" should also be possible ;). At best there will be a calendar where you grey-out if you don't have time.
@@ -96,8 +98,10 @@ def combine_group_markings(group, current_dates):
 
 
 def create_new_user(username):
-    users = open("data/users.txt").read().splitlines()
-    open("data/users.txt", "w").writelines("\n".join(users+[username]))
+    with open("data/users.json", "r+w") as users_file:
+        users = json.load(users_file).keys()
+        users[username] = None  # seen date default
+        json.dump(users, users_file, indent=1)
 
     # save new empty username json
     empty_json = {}
@@ -107,7 +111,7 @@ def create_new_user(username):
 
 def update_user_group(user, group):
     groups = get_groups()
-    if group not in groups:
+    if group not in groups:  # call for new group creation
         groups[group] = {"users": [user]}  # create new group with user
         state = "added user to new group " + group
     elif user in groups[group]["users"]:
@@ -142,9 +146,9 @@ def update_group_defaults(defaults, group):
 # ToDo: create events for group views update in case of timeouts which can be terminated.
 
 
-def update_group_user_views(user, polling_state, timeout=timedelta(days=1)):
+def eval_polling_state(user, polling_state, timeout=timedelta(days=1)):
     """
-    Update the view for the groups of the users after a timeout is reached or if the user ended the polling
+    Evaluate the polling state of a user after a timeout is reached or if the user ended the polling
     :param user:
         The user to update the views for
     :param polling_state:
@@ -158,24 +162,38 @@ def update_group_user_views(user, polling_state, timeout=timedelta(days=1)):
     match polling_state:
         case "blur":
             # if the user actively lost focus to the Calendar
-            print("User lost focus")
+            # the user started the polling but left it and might not come back - start a timer for the view to be updated
+            # ToDo: create timeout event via ¿treading.Timer?
+            return "starting timeout"
         case "beforeunload":
-            # if the tab or browser is closed by the user
-            print("User closed poll")
+            # the tab or browser is closed by the user he most likely ended polling or went to the settings section
+            #
+            update_group_views(user)
+            return "saved seen-state"
 
-        # if the user started the polling start a timer for the view to be updated
         # if the user finishes the polling within the time the timer will be canceled and the view updated
-        # ToDo: create timeout event via ¿treading.Timer?
-    return "User views updated"
-    groups = get_groups()
-    user_groups = MonthGreyer(user).find_user_groups()
-    for group in user_groups:
-        groups[group]["views"][user] = date.today()
 
+
+def update_group_views(user, view_date=date.today(), month_range=MONTH_RANGE):
+    """
+    Update the view for the groups of the users
+    :param user: username
+    :param view_date: date of the view
+    :param month_range: the timeline the user has seen/voted for
+    :return:
+    """
+    today_i_mr = view_date + relativedelta(months=month_range+1)  # get into the next month outside the range
+    last_seen_date = date(year=today_i_mr.year, month=today_i_mr.month, day=0) - relativedelta(days=1)  # just the last day of the month
+    # write the view date to the users in the user file
+    with open("data/users.json", "r+w") as users_file:
+        users = json.load(users_file)
+        users[user] = last_seen_date
+        json.dump(users, users_file, indent=1)
+    return "User views updated"
+# ToDo: check if that's actually the right date for a "last seen date"
 
 class MonthGreyer:
-    def __init__(self, current_user, month_range=2):
-        # ToDo: add user to group as seen (today.month + m_range)
+    def __init__(self, current_user, month_range=MONTH_RANGE):
         self.user = current_user
         self.month_range = month_range
         self.today = datetime.today().date()

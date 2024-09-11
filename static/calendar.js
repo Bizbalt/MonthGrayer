@@ -110,6 +110,14 @@ async function calendarInit(month_range = 2) {
         }
         calendarContainer.appendChild(calendar)
     }
+    // add an auto-save description
+    const paragraph = document.createElement("p")
+    paragraph.innerText = "Just close the tab if you're done ;)"
+
+    paragraph.setAttribute("class", "span")
+
+    calendarContainer.appendChild(paragraph)
+
     // user specific settings button
     let settingsAnchor = document.createElement("a")
     settingsAnchor.id = "settingsAnchor"
@@ -130,7 +138,6 @@ async function calendarInit(month_range = 2) {
     calendarContainer.appendChild(settingsAnchor)
 }
 
-// testing generation for multiple months
 function currentDayRange(monthRange = 2) { // function gives out a range of dates for a range of months starting from today
     let today = new Date();
     let months = [];
