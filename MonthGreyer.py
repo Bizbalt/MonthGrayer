@@ -1,15 +1,12 @@
 import calendar
-import csv
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 import locale
 import json
+import threading
+
 # for German locale
 locale.setlocale(locale.LC_TIME, "de_DE.utf8")
-with open("data/communities.txt", "r") as file:
-    communities = file.read().splitlines()
-
-MONTH_RANGE = 2
 
 '''
 An alternative Doodle in which you cross-out on which days you are not available (on default, if you can only on a few
@@ -46,11 +43,19 @@ Alike the transfer of data from front-end to back-end and vice versa should be i
          from cache from the day before or over midnight 23:59:59 -> 00:00:00)     
 '''
 
+with open("data/communities.txt", "r") as communities_file:
+    communities = communities_file.read().splitlines()
+
+MONTH_RANGE = 2  # this month plus the next two months
+TIMEOUT_SECONDS = 60 * 60 * 5  # 5 hours
+
 STATE_description = {"free": "green - day has not not been voted to be blocked",
                      "freed": "orange - day was blocked and then freed by same user after a time",
                      "blocked": "grey - day has been voted to be blocked",
                      "self_blocked": "light_greyed - day has been voted to be blocked by the user himself",
                      "past": "colorless - day lies in the past and is not of interest anymore"}
+
+timings = {}
 
 
 def date_range(start, end):
@@ -98,15 +103,17 @@ def combine_group_markings(group, current_dates):
 
 
 def create_new_user(username):
-    with open("data/users.json", "r+w") as users_file:
-        users = json.load(users_file).keys()
-        users[username] = None  # seen date default
-        json.dump(users, users_file, indent=1)
+    with open("data/users.json", "r+") as users_file:
+        users = json.load(users_file)  # Read the file
+        users[username] = ""  # Update the dictionary
+        users_file.seek(0)  # Move the file pointer to the beginning
+        json.dump(users, users_file, indent=1)  # Write the updated dictionary
+        users_file.truncate()  # Remove any remaining data after the new content
 
     # save new empty username json
     empty_json = {}
-    with open("data/" + username + ".json", "x") as file:
-        json.dump(empty_json, file, indent=1)
+    with open("data/" + username + ".json", "x") as user_file:
+        json.dump(empty_json, user_file, indent=1)
 
 
 def update_user_group(user, group):
@@ -143,7 +150,21 @@ def update_group_defaults(defaults, group):
     return state
 
 
-# ToDo: create events for group views update in case of timeouts which can be terminated.
+def update_timer(user, action):
+    match action:
+        case "start":
+            if user in timings:
+                timings[user].cancel()
+                # Timer cancelled for restart
+
+            timings[user] = threading.Timer(TIMEOUT_SECONDS, update_group_views, args=[user])
+            timings[user].start()
+            # Timer started
+        case "stop":
+            if user in timings:
+                timings[user].cancel()
+                timings.pop(user)
+                # Timer stopped
 
 
 def eval_polling_state(user, polling_state, timeout=timedelta(days=1)):
@@ -160,18 +181,18 @@ def eval_polling_state(user, polling_state, timeout=timedelta(days=1)):
     """
 
     match polling_state:
+        # the user started the polling but left it and might not come back - start a timer for the view to be updated
         case "blur":
             # if the user actively lost focus to the Calendar
-            # the user started the polling but left it and might not come back - start a timer for the view to be updated
-            # ToDo: create timeout event via ¿treading.Timer?
+            update_timer(user, "start")
             return "starting timeout"
-        case "beforeunload":
-            # the tab or browser is closed by the user he most likely ended polling or went to the settings section
-            #
-            update_group_views(user)
-            return "saved seen-state"
 
         # if the user finishes the polling within the time the timer will be canceled and the view updated
+        case "beforeunload":
+            # the tab or browser is closed by the user he most likely ended polling or went to the settings section
+            update_timer(user, "stop")
+            update_group_views(user)
+            return "saved seen-state"
 
 
 def update_group_views(user, view_date=date.today(), month_range=MONTH_RANGE):
@@ -182,15 +203,18 @@ def update_group_views(user, view_date=date.today(), month_range=MONTH_RANGE):
     :param month_range: the timeline the user has seen/voted for
     :return:
     """
-    today_i_mr = view_date + relativedelta(months=month_range+1)  # get into the next month outside the range
-    last_seen_date = date(year=today_i_mr.year, month=today_i_mr.month, day=0) - relativedelta(days=1)  # just the last day of the month
+    # get into the next month outside the range and then back just to the last day of the month
+    today_i_mr = view_date + relativedelta(months=month_range+1)
+    last_seen_date = date(year=today_i_mr.year, month=today_i_mr.month, day=1) - relativedelta(days=1)
     # write the view date to the users in the user file
-    with open("data/users.json", "r+w") as users_file:
+    with open("data/users.json", "r+") as users_file:
         users = json.load(users_file)
-        users[user] = last_seen_date
+        users_file.seek(0)
+        users[user] = str(last_seen_date)
         json.dump(users, users_file, indent=1)
+        users_file.truncate()
     return "User views updated"
-# ToDo: check if that's actually the right date for a "last seen date"
+
 
 class MonthGreyer:
     def __init__(self, current_user, month_range=MONTH_RANGE):
