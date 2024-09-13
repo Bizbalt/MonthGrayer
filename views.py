@@ -11,6 +11,11 @@ def favicon():
     return send_from_directory(os.path.join(views.root_path, 'static/images'), 'favicon_dark.ico')
 
 
+@views.route('/robots.txt')
+def robots_txt():
+    return send_from_directory(os.path.join(views.root_path, 'static'), 'robots.txt')
+
+
 @views.route("/impressum")
 def impressum():
     return render_template("Impressum.html")
