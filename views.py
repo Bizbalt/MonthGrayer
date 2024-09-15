@@ -53,7 +53,7 @@ def de_grey_day(username, day_distance):
 
 
 def check_user_exist(username):
-    # checking for existing user (the file does not contain the holiday "users")
+    # checking for existing user (the file does not contain the "holiday users")
     users = json.load(open("data/users.json"))
     if username not in users:
         return False
@@ -61,14 +61,14 @@ def check_user_exist(username):
 
 
 @views.route('/user/<string:username>')
-def command(username=None):
+def serve_userdata(username=None):
     if not (check_user_exist(username)):
         return "no user found"
     calendar_data = MonthGreyer(username)
     return jsonify(calendar_data.get_choice_markings())
 
 
-@views.route("/settings/<string:username>")
+@views.route("/settings/<string:username>")  # I can send invites with prior set names with this Link
 def settings(username):
     if not (check_user_exist(username)):
         create_new_user(username)
