@@ -1,3 +1,3 @@
 # this website shall not be indexed by search engines so no random usage by users nor crawlers should be using the servers' bandwidth. There is nothing to scrape here for anyway ;)
-
+User-agent: *
 Disallow: /
