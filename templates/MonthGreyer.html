@@ -26,17 +26,18 @@
         onkeydown="this.style.width = getWidthOfInput(event) + 'px'" onkeyup="check_user()">
 
     <br>
-    <button type="button" id="create_user" onclick="goto_user_page(current_user)" style="display: none; margin-top: 10px">I shouldn't be
-        visible.</button>
-    <p style="display: none; width: 60%" id="create_user_info">Please specialise your username so double entries are unlikely: <br>
+
+    <p style="display: none; width: 60%" id="create_user_info"> Seems like this user does not exist.
+        <br> Please specialise your username so double entries are unlikely: <br>
         e.g.: Johannes &#8594; Johannes (Mathemagier) or Krarilotus. <br>
-        Your username is almost already like your password to your vote.<br>
+        Your username is almost already like your password to your vote (case sensitive).<br>
         <span style="font-size: x-small">
             The alternative would be to ask you for passwords or store your IP address in combination -_-'<br></span>
         <span style="font-size: xx-small">
             I also might not be able to recognise Conqueeftador420 as your gamertag if that's your access ¯\_(ツ)_/¯</span>
     </p>
-
+    <button type="button" id="create_user" onclick="goto_user_page(current_user)" style="display: none; margin-top: 10px">I shouldn't be
+            visible.</button>
     <div class="fade_div" id="calendarContainer">
         {#here the calendar and headers will be placed#}
 
