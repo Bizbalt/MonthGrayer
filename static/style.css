@@ -57,6 +57,11 @@ button {
   animation: fade-out 2s;
 }
 
+/* ToDo: bezier curve for the fade-out animation */
+@keyframes bez {
+
+}
+
 
 /*the fade animations*/
 @keyframes fade-out {
