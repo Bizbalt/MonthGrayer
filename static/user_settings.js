@@ -10,6 +10,9 @@ async function show_change(change) {
     infobox.setAttribute("class", "info_popup")
     infobox.innerText = change
     dummy_div.appendChild(infobox)
+    setTimeout(() => {
+        infobox.classList.add("animated")
+    }, 100); // Delay for 100ms
     await new Promise(r => setTimeout(r, 1900)) // wait a little bit less than the animation takes
     infobox.remove()
 }

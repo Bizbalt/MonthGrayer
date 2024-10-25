@@ -54,12 +54,18 @@ button {
   padding: 2rem;
   background: #000000;
   font-size: 2rem;
-  animation: fade-out 2s;
+  /*animation: fade-out 2s;*/
+  opacity: 1; /* Start visible */
+  visibility: visible; /* Start visible */
+  transition: opacity 2s cubic-bezier(0.645, 0.045, 0.355, 1),
+              transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1),
+              visibility 2s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
-/* ToDo: bezier curve for the fade-out animation */
-@keyframes bez {
-
+.info_popup.animated {
+    opacity: 0; /* Fade out */
+    transform: translate(-50%, 20%) scale(0.90); /* Move it down add a slight scale effect for more smoothness */
+    visibility: hidden; /* Make it invisible after fading out */
 }
 
 
