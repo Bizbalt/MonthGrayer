@@ -112,7 +112,7 @@ def create_new_user(username):
 
     # save new empty username json
     empty_json = {}
-    with open("data/" + username + ".json", "x") as user_file:
+    with open("data/users/" + username + ".json", "x") as user_file:
         json.dump(empty_json, user_file, indent=1)
 
 
@@ -267,12 +267,12 @@ class MonthGreyer:
 
     def save_user_markings(self):
         markings_dict = {str(self.current_dates[i]): self.markings[i] for i in range(len(self.current_dates))}
-        with open("data/" + self.user + ".json", "w") as file:
+        with open("data/users/" + self.user + ".json", "w") as file:
             json.dump(markings_dict, file, indent=1)
 
     def load_user_markings(self):
         try:
-            with open("data/" + self.user + ".json", "r") as file:
+            with open("data/users/" + self.user + ".json", "r") as file:
                 markings = json.load(file)
         except (json.JSONDecodeError, FileNotFoundError):
             raise FileNotFoundError("No markings found for user " + self.user)

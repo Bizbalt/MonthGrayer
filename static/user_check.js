@@ -15,6 +15,9 @@ async function check_user() {
         return
     }
     const response = await fetch(url + `/user/${user}`)
+    if (response.status !== 200) {
+        console.log("can't fetch user")
+    }
 
     const responseText = await response.text()
     // fade in calendarContainer if user is not none
