@@ -9,10 +9,10 @@ function rid_blur_and_set_seen_state(event) { // on unload the blur event is tri
 
     if (auto_fade_state === false) { // if the calendar is visible the user is viable and has seen it
         fetch(`set_polling_state/${current_user}/${event.type}`).then(r => {})//.then(response => response.text());
-    }
-
     // Set returnValue for beforeunload to ensure browsers still send the set_polling_state
     event.returnValue = "Are you sure you want to leave?";
+    }
+
     return event.returnValue;
 }
 function set_seen_state(event) {

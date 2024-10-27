@@ -1,5 +1,19 @@
 let current_user = ""
 let create_user_opportunity = -1
+
+async function user_check_init(){
+    const create_user_button = document.getElementById("create_user")
+    const input_line = document.getElementById("current_user")
+    input_line.addEventListener("keypress", function (event){
+        // If the user presses the "Enter" key on the keyboard
+        if (event.key === "Enter") {
+            // Cancel the default action, if needed
+            event.preventDefault();
+            // Trigger the button element with a click
+            create_user_button.click();}
+    })
+}
+
 async function check_user() {
     let btn = document.getElementById("create_user");
     let info_text = document.getElementById("create_user_info");
