@@ -92,8 +92,8 @@ def user_group_defaults(defaults, group):
     return state
 
 
-@views.route("/polling_state/<string:username>/<string:polling_state>")
-def polling_state(username, polling_state):
+@views.route("/set_polling_state/<string:username>/<string:polling_state>")
+def set_polling_state(username, polling_state):
     state = eval_polling_state(username, polling_state)
     return state
 
