@@ -47,7 +47,7 @@ with open("data/communities.txt", "r") as communities_file:
     communities = communities_file.read().splitlines()
 
 MONTH_RANGE = 2  # this month plus the next two months
-TIMEOUT_SECONDS = 60 * 60 * 5  # 5 hours
+TIMEOUT_SECONDS = 60 * 60 * 2  # 2 hours
 
 STATE_description = {"free": "green - day has not not been voted to be blocked",
                      "freed": "orange - day was blocked and then freed by same user after a time",
