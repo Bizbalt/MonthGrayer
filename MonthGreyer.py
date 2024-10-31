@@ -47,7 +47,7 @@ with open("data/communities.txt", "r") as communities_file:
     communities = communities_file.read().splitlines()
 
 MONTH_RANGE = 2  # this month plus the next two months
-TIMEOUT_SECONDS = 60 * 60 * 2  # 2 hours
+TIMEOUT_SECONDS = 60 * 6 * 1  # The time it takes to do the poll (6 min)
 
 STATE_description = {"free": "green - day has not not been voted to be blocked",
                      "freed": "orange - day was blocked and then freed by same user after a time",
@@ -150,7 +150,7 @@ def update_group_defaults(defaults, group):
     return state
 
 
-def update_timer(user, action):
+def update_seen_timer(user, action):
     match action:
         case "start":
             if user in timings:
@@ -167,41 +167,13 @@ def update_timer(user, action):
                 # Timer stopped
 
 
-def eval_polling_state(user, polling_state, timeout=timedelta(days=1)):
-    """
-    Evaluate the polling state of a user after a timeout is reached or if the user ended the polling
-    :param user:
-        The user to update the views for
-    :param polling_state:
-        describes the polling case the user is in
-    :param timeout:
-        The time to wait until the view update will be forced
-    :return:
-        None
-    """
-
-    match polling_state:
-        # the user started the polling but left it and might not come back - start a timer for the view to be updated
-        case "blur":
-            # if the user actively lost focus to the Calendar
-            update_timer(user, "start")
-            return "starting timeout"
-
-        # if the user finishes the polling within the time the timer will be canceled and the view updated
-        case "beforeunload":
-            # the tab or browser is closed by the user he most likely ended polling or went to the settings section
-            update_timer(user, "stop")
-            update_group_views(user)
-            return "saved seen-state"
-
-
 def update_group_views(user, view_date=date.today(), month_range=MONTH_RANGE):
     """
-    Update the view for the groups of the users
+    Update the view time and status of polling for the groups of the user.
     :param user: username
     :param view_date: date of the view
     :param month_range: the timeline the user has seen/voted for
-    :return:
+    :return: Possibly free days per group where everyone has time.
     """
     # get into the next month outside the range and then back just to the last day of the month
     today_i_mr = view_date + relativedelta(months=month_range+1)
@@ -213,7 +185,8 @@ def update_group_views(user, view_date=date.today(), month_range=MONTH_RANGE):
         users[user] = str(last_seen_date)
         json.dump(users, users_file, indent=1)
         users_file.truncate()
-    return "User views updated"
+
+    # ToDo: Check for complete survey and consequently for free days in the group
 
 
 class MonthGreyer:
@@ -311,4 +284,8 @@ class MonthGreyer:
                     if priority in day:
                         user_choice_markings.append(priority)
                         break
+
+        # this means the user logged into his vision
+        update_seen_timer(self.user, "start")
+
         return user_choice_markings

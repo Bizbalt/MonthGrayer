@@ -1,6 +1,6 @@
 import json
 from flask import Blueprint, render_template, jsonify, send_from_directory, redirect
-from MonthGreyer import MonthGreyer, get_settings_page, create_new_user, update_user_group, update_group_defaults, eval_polling_state, communities
+from MonthGreyer import MonthGreyer, get_settings_page, create_new_user, update_user_group, update_group_defaults, communities
 import os
 
 views = Blueprint(__name__, "views")
@@ -90,10 +90,3 @@ def user_group_update(username, group):
 def user_group_defaults(defaults, group):
     state = update_group_defaults(defaults, group)
     return state
-
-
-@views.route("/set_polling_state/<string:username>/<string:polling_state>")
-def set_polling_state(username, polling_state):
-    state = eval_polling_state(username, polling_state)
-    return state
-
