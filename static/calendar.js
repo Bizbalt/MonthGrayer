@@ -64,7 +64,7 @@ async function calendarInit(month_range = 2) {
         // headline
         let currentMonth = month + m_r
         let currentYear = year
-        if (currentMonth > 12){
+        if (currentMonth > 11){
             currentMonth -= 12
             currentYear = year + 1
         }
@@ -74,7 +74,7 @@ async function calendarInit(month_range = 2) {
         const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
 
         const h2 = document.createElement("h2")
-        h2.innerText = `${months[currentMonth]} ${year}`
+        h2.innerText = `${months[currentMonth]} ${currentYear}`
         h2.setAttribute("class", "h2")
         calendarContainer.appendChild(h2)
 
