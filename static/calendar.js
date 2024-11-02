@@ -112,7 +112,7 @@ async function calendarInit(month_range = 2) {
     }
     // add an auto-save description
     const paragraph = document.createElement("p")
-    paragraph.innerText = "Just close the tab if you're done ;)"
+    paragraph.innerText = "Click to block/unblock. Just close the tab if you're done ;)"
 
     paragraph.setAttribute("class", "span")
 
@@ -178,12 +178,12 @@ function fillCalendar(markings) {
         for (const tr of ct.children) {
             for (const td of tr.children) {
                 // check if the inner text is a number
-                if (isNaN(td.innerText) || (td.innerText === "")) { // check if the day is not an day element
+                if (isNaN(td.innerText) || (td.innerText === "")) { // check if the day is not a day element
                     continue
                 }
                 const distance = td.distance = day_distance // day is the distance from the first day of the month.
                 day_distance++
-                    td.setAttribute("class", markings[distance])
+                td.setAttribute("class", markings[distance])
             }
         }
     }

@@ -29,8 +29,20 @@
     background-color: #004f23;
 }
 
+.free:hover {
+    background-color: #556c5b;
+    /*animation: shake 0.5s;*/
+    /*animation-iteration-count: infinite;*/
+}
+
 .freed {
     background-color: #554f13;
+}
+
+.freed:hover {
+    background-color: #405445;
+    /*animation: shake 0.5s;*/
+    /*animation-iteration-count: infinite;*/
 }
 
 .blocked {
@@ -44,24 +56,15 @@
     /*background-size: cover;*/
 }
 
+.self_blocked:hover {
+    background-image: linear-gradient(180deg, #2b5936, #3f4f17);
+    /*animation: shake 5s;*/
+    /*animation-iteration-count: infinite;*/
+}
+
 .past {
     cursor: default !important;
     background-color: transparent;
-}
-
-.free:hover{
-    /*animation: shake 0.5s;*/
-    /*animation-iteration-count: infinite;*/
-}
-
-.freed:hover{
-    /*animation: shake 0.5s;*/
-    /*animation-iteration-count: infinite;*/
-}
-
-.self_blocked:hover{
-    /*animation: shake 5s;*/
-    /*animation-iteration-count: infinite;*/
 }
 
 .h2 {
