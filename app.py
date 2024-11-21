@@ -1,12 +1,26 @@
 from flask import Flask
-from views import views, communities
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+import os
 
 # instantiate the app
 app = Flask(__name__)
 
+# initialize Limiter and set key function to IP address
+# Define the path to the data folder
+rate_limit_storage_path = os.path.join(os.path.dirname(__file__), 'data', 'ratelimit')
+
+limiter = Limiter(key_func=get_remote_address,
+                  app=app,
+                  storage_uri="filesystem:///data/ratelimit")
+
+
 # ToDo include communities e.g. (probably via subdomains)
 # community = "1337"
 # app.register_blueprint(views, url_prefix="/" + community)
+
+# import of views must happen after initialisation of the limiter so circular import will be circumvented
+from views import views, communities
 app.register_blueprint(views, url_prefix="/")
 
 if __name__ == "__main__":
