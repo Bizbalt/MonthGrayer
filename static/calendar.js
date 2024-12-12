@@ -8,8 +8,8 @@ const CELL_STATE = {
     past: "past",
 }
 
-// create a dictionary per session to store the currently greyed days for freeing instead or "freed-ing"
-let session_greyed_days = {}
+// create a dictionary per session to store the currently grayed days for freeing instead or "freed-ing"
+let session_grayed_days = {}
 
 async function mark_day(td) {
     const classes = td.getAttribute("class")
@@ -17,21 +17,21 @@ async function mark_day(td) {
     let success = false
     switch (classes) {
         case "free":
-            success = await (await fetch(url + `grey_day/${current_user}/${distance}`)).text() === "True"
+            success = await (await fetch(url + `gray_day/${current_user}/${distance}`)).text() === "True"
             if (success) {
                 td.setAttribute("class", CELL_STATE.self_blocked);
-                session_greyed_days[distance] = true
+                session_grayed_days[distance] = true
             }
             return;
         case "freed":
-            success = await (await fetch(url + `grey_day/${current_user}/${distance}`)).text() === "True"
+            success = await (await fetch(url + `gray_day/${current_user}/${distance}`)).text() === "True"
             if (success) {
                 td.setAttribute("class", CELL_STATE.self_blocked);
             }
             return;
         case "self_blocked":
-            if (distance in session_greyed_days) {
-                success = await (await fetch(url + `de_grey_day/${current_user}/${distance}`)).text() === "True"
+            if (distance in session_grayed_days) {
+                success = await (await fetch(url + `de_gray_day/${current_user}/${distance}`)).text() === "True"
                 if (success) {
                     td.setAttribute("class", CELL_STATE.free);
                 }

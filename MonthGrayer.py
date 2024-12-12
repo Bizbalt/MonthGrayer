@@ -10,26 +10,26 @@ locale.setlocale(locale.LC_TIME, "de_DE.utf8")
 
 '''
 An alternative Doodle in which you cross-out on which days you are not available (on default, if you can only on a few
- days "greening" should also be possible ;). At best there will be a calendar where you grey-out if you don't have time.
+ days "greening" should also be possible ;). At best there will be a calendar where you gray-out if you don't have time.
   Otherwise, they're green. If someone frees a space again it gets orange (As it's a "new" date for all others). There
-   is an extra list to see who voted. Depending on which Person and or Group you choose you can only grey out what that
-    person is signed up for or only grey out for that Group. There should be an option to write to multiple campaigns
-     at the same time, eg. tick multiple groups. When you're done you save the "Greying" with your Name. Automatic push
-      when all voted, or if all greyed out would be nice. Month-wise - Month and year can be chosen in the beginning.
-       Should also have the possibility to see who grey-ed what with a "correct" function, where you can undo your own
-        grey-ing. While greying the changed (also prior changed) days should be marked somehow, and also the only
+   is an extra list to see who voted. Depending on which Person and or Group you choose you can only gray out what that
+    person is signed up for or only gray out for that Group. There should be an option to write to multiple campaigns
+     at the same time, eg. tick multiple groups. When you're done you save the "Graying" with your Name. Automatic push
+      when all voted, or if all grayed out would be nice. Month-wise - Month and year can be chosen in the beginning.
+       Should also have the possibility to see who gray-ed what with a "correct" function, where you can undo your own
+        gray-ing. While graying the changed (also prior changed) days should be marked somehow, and also the only
          possible changeable. 
 
 Maybe let the users vote over this what they prefer. Collect their answer + ~~ip~~ name.
 
-I need a file format: array  for each day: 0-grey, "none"-green, 2 orange. Every days "number" should also have none or 
- the respective changer so one can see what he changed only. So I actually need a fourth color 1-light_grey so the
-  person which greyed it can see that he can un-grey it.
-Storing wise the greying of persons should be stored and if not applicable, the greying
- for the "group"-account. Then on load the overall greying should be computed out of those. 
+I need a file format: array  for each day: 0-gray, "none"-green, 2 orange. Every days "number" should also have none or 
+ the respective changer so one can see what he changed only. So I actually need a fourth color 1-light_gray so the
+  person which grayed it can see that he can un-gray it.
+Storing wise the graying of persons should be stored and if not applicable, the graying
+ for the "group"-account. Then on load the overall graying should be computed out of those. 
 
-Standard look should be dark, so I better go inspired by the Dracula theme with dark grey background grey boxes. The
- greying makes dark grey, otherwise it's a dimmed green, a dimmed orange :shrug:
+Standard look should be dark, so I better go inspired by the Dracula theme with dark gray background gray boxes. The
+ graying makes dark gray, otherwise it's a dimmed green, a dimmed orange :shrug:
 
 the program should notice which day the last day was, everybody has seen, and then check if in the time from now to
  this specific last shared date any dates exist where everybody has time. 
@@ -51,8 +51,8 @@ TIMEOUT_SECONDS = 60 * 6 * 1  # The time it takes to do the poll (6 min)
 
 STATE_description = {"free": "green - day has not not been voted to be blocked",
                      "freed": "orange - day was blocked and then freed by same user after a time",
-                     "blocked": "grey - day has been voted to be blocked",
-                     "self_blocked": "light_greyed - day has been voted to be blocked by the user himself",
+                     "blocked": "gray - day has been voted to be blocked",
+                     "self_blocked": "light_grayed - day has been voted to be blocked by the user himself",
                      "past": "colorless - day lies in the past and is not of interest anymore"}
 
 timings = {}
@@ -74,7 +74,7 @@ def get_groups():
 
 def get_settings_page(user):
     groups = get_groups()
-    user_groups = MonthGreyer(user).find_user_groups()
+    user_groups = MonthGrayer(user).find_user_groups()
     user_group_dic = {group: "true" if group in user_groups else "false" for group in groups.keys()}
     return user_group_dic
 
@@ -82,7 +82,7 @@ def get_settings_page(user):
 def combine_group_markings(group, current_dates):
     groups = get_groups()
     # get all the markings per user
-    user_markings = [MonthGreyer(user).markings for user in groups[group]["users"]]
+    user_markings = [MonthGrayer(user).markings for user in groups[group]["users"]]
 
     # combine the markings
     priorities = {"past": "past", "self_blocked": "blocked", "freed": "freed", "free": "free"}
@@ -189,7 +189,7 @@ def update_group_views(user, view_date=date.today(), month_range=MONTH_RANGE):
     # ToDo: Check for complete survey and consequently for free days in the group
 
 
-class MonthGreyer:
+class MonthGrayer:
     def __init__(self, current_user, month_range=MONTH_RANGE):
         self.user = current_user
         self.month_range = month_range
@@ -211,10 +211,10 @@ class MonthGreyer:
 
     def __str__(self):  # https://docs.python.org/3.8/library/datetime.html#strftime-strptime-behavior
         return date(
-            self.today.year, self.today.month, 1).strftime("MonthGreyer for %B of the year %Y for the user "
+            self.today.year, self.today.month, 1).strftime("MonthGrayer for %B of the year %Y for the user "
                                                            ) + self.user + " (range {})".format(self.month_range)
 
-    def grey_day(self, distance: int):  # distance from the first day of the month
+    def gray_day(self, distance: int):  # distance from the first day of the month
         if self.markings[distance] == "freed" or self.markings[distance] == "free":
             self.markings[distance] = "self_blocked"
             self.save_user_markings()
@@ -230,7 +230,7 @@ class MonthGreyer:
         else:
             raise ValueError("Day cannot be freed (again)")
 
-    def de_grey_day(self, distance: int):  # distance from the first day of the month
+    def de_gray_day(self, distance: int):  # distance from the first day of the month
         if self.markings[distance] == "self_blocked":
             self.markings[distance] = "free"
             self.save_user_markings()

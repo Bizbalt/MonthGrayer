@@ -51,7 +51,7 @@
 }
 
 .self_blocked {
-    background-color: grey;
+    background-color: gray;
     /*background-image: url("./images/broken.png"); ToDo: I need some simpler symbol to interlace */
     /*background-size: cover;*/
 }

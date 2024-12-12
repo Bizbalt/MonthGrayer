@@ -1,6 +1,6 @@
 import json
 from flask import Blueprint, render_template, jsonify, send_from_directory, redirect
-from MonthGreyer import MonthGreyer, get_settings_page, create_new_user, update_user_group, update_group_defaults, communities
+from MonthGrayer import MonthGrayer, get_settings_page, create_new_user, update_user_group, update_group_defaults, communities
 import os
 
 views = Blueprint(__name__, "views")
@@ -23,32 +23,32 @@ def impressum():
 
 @views.route("/")
 def home():
-    return redirect("/MonthGreyer")
+    return redirect("/MonthGrayer")
 
 
-@views.route("/MonthGreyer")
+@views.route("/MonthGrayer")
 def intro_page():
-    return render_template("MonthGreyer.html")
+    return render_template("MonthGrayer.html")
 
 
-@views.route("/grey_day/<string:username>/<string:day_distance>")
-def grey_day(username, day_distance):
-    calendar_data = MonthGreyer(username)
-    success = calendar_data.grey_day(int(day_distance))
+@views.route("/gray_day/<string:username>/<string:day_distance>")
+def gray_day(username, day_distance):
+    calendar_data = MonthGrayer(username)
+    success = calendar_data.gray_day(int(day_distance))
     return str(success)
 
 
 @views.route("/free_day/<string:username>/<string:day_distance>")
 def free_day(username, day_distance):
-    calendar_data = MonthGreyer(username)
+    calendar_data = MonthGrayer(username)
     success = calendar_data.free_day(int(day_distance))
     return str(success)
 
 
-@views.route("/de_grey_day/<string:username>/<string:day_distance>")
-def de_grey_day(username, day_distance):
-    calendar_data = MonthGreyer(username)
-    success = calendar_data.de_grey_day(int(day_distance))
+@views.route("/de_gray_day/<string:username>/<string:day_distance>")
+def de_gray_day(username, day_distance):
+    calendar_data = MonthGrayer(username)
+    success = calendar_data.de_gray_day(int(day_distance))
     return str(success)
 
 
@@ -64,7 +64,7 @@ def check_user_exist(username):
 def serve_userdata(username=None):
     if not (check_user_exist(username)):
         return "no user found"
-    calendar_data = MonthGreyer(username)
+    calendar_data = MonthGrayer(username)
     return jsonify(calendar_data.get_choice_markings())
 
 
