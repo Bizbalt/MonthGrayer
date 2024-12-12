@@ -3,7 +3,9 @@ from flask import Blueprint, render_template, jsonify, send_from_directory, redi
 from MonthGrayer import MonthGrayer, get_settings_page, create_new_user, update_user_group, update_group_defaults, communities
 import os
 
-views = Blueprint(__name__, "views")
+from app import limiter
+
+views = Blueprint("views", __name__)
 
 
 @views.route('/favicon.ico')
@@ -61,6 +63,7 @@ def check_user_exist(username):
 
 
 @views.route('/user/<string:username>')
+@limiter.limit("100 per hour")
 def serve_userdata(username=None):
     if not (check_user_exist(username)):
         return "no user found"
