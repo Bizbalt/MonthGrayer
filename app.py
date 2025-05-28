@@ -15,6 +15,7 @@ limiter = Limiter(key_func=get_remote_address,
                   storage_uri="filesystem:///data/ratelimit")
 
 
+# ToDo in case I want to ship it as a docker container alike the Raft knowledgebase website: https://github.com/aquasecurity/trivy (for automatic finding of vulnerabilities) and https://github.com/goodwithtech/dockle (for automatic image creation security)
 # ToDo include communities e.g. (probably via subdomains)
 # community = "1337"
 # app.register_blueprint(views, url_prefix="/" + community)
