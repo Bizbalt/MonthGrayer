@@ -46,7 +46,7 @@ Alike the transfer of data from front-end to back-end and vice versa should be i
 with open("data/communities.txt", "r") as communities_file:
     communities = communities_file.read().splitlines()
 
-MONTH_RANGE = 2  # this month plus the next two months
+MONTH_RANGE = 2  # this month plus the next two months = 2
 TIMEOUT_SECONDS = 60 * 6 * 1  # The time it takes to do the poll (6 min)
 
 STATE_description = {"free": "green - day has not not been voted to be blocked",
@@ -55,7 +55,7 @@ STATE_description = {"free": "green - day has not not been voted to be blocked",
                      "self_blocked": "light_grayed - day has been voted to be blocked by the user himself",
                      "past": "colorless - day lies in the past and is not of interest anymore"}
 
-timings = {}
+timings = {}  # used to keep track of threads running as timers for reactions
 
 
 def date_range(start, end):
@@ -170,6 +170,7 @@ def update_seen_timer(user, action):
 def update_group_views(user, view_date=date.today(), month_range=MONTH_RANGE):
     """
     Update the view time and status of polling for the groups of the user.
+    Subsequently, check for complete and contemporary surveys for each group.
     :param user: username
     :param view_date: date of the view
     :param month_range: the timeline the user has seen/voted for
@@ -186,7 +187,45 @@ def update_group_views(user, view_date=date.today(), month_range=MONTH_RANGE):
         json.dump(users, users_file, indent=1)
         users_file.truncate()
 
-    # ToDo: Check for complete survey and consequently for free days in the group
+    gen_groups_status()
+
+
+def gen_groups_status():
+    # ToDo: Check for complete surveys (groups ready to receive dates)
+    # determine if each user has completed his survey
+    with open("data/users.json", "r+") as users_file:
+        users = json.load(users_file)
+
+    users_and_pollstates = {}
+    users_and_voting = {}
+    for user, viewstate in users.items():
+        if viewstate == "":
+            users_and_pollstates[user] = False
+        # a users survey is only usable if still at least voted until the next day
+        else:
+            user_seen_date = datetime.strptime(viewstate, "%Y-%m-%d")
+            if (datetime.now() - user_seen_date).days > 1:
+                users_and_pollstates[user] = user_seen_date
+            else:
+                users_and_pollstates[user] = False
+
+    # get the group stats for those which are ready
+    groups_rdy = {}
+    groups = get_groups()
+
+    dummy_user = MonthGrayer(list(users.keys())[0])
+    for group in groups.keys():
+        if any([users_and_pollstates[group_user]==False for group_user in groups[group]["users"]]):
+            continue
+
+        earliest_seen_date = min([users_and_pollstates[group_user] for group_user in groups[group]["users"]])
+        # compute all available days per group
+        group_markings = combine_group_markings(group, dummy_user.current_dates)
+
+        # get only the free and freed days and cut-off all days older than the earliest seen date
+        free_days = [free_date for free_date, marking in zip(dummy_user.current_dates, group_markings) if (marking in ["free", "freed"] and free_date <= earliest_seen_date)]
+        # ToDo: Test and return group views as dicts (groups_rdy)
+        return free_days
 
 
 class MonthGrayer:
