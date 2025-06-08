@@ -191,20 +191,18 @@ def update_group_views(user, view_date=date.today(), month_range=MONTH_RANGE):
 
 
 def gen_groups_status():
-    # ToDo: Check for complete surveys (groups ready to receive dates)
     # determine if each user has completed his survey
     with open("data/users.json", "r+") as users_file:
         users = json.load(users_file)
 
     users_and_pollstates = {}
-    users_and_voting = {}
     for user, viewstate in users.items():
         if viewstate == "":
             users_and_pollstates[user] = False
         # a users survey is only usable if still at least voted until the next day
         else:
             user_seen_date = datetime.strptime(viewstate, "%Y-%m-%d")
-            if (datetime.now() - user_seen_date).days > 1:
+            if (user_seen_date - datetime.now()).days > 1:
                 users_and_pollstates[user] = user_seen_date
             else:
                 users_and_pollstates[user] = False
@@ -215,17 +213,19 @@ def gen_groups_status():
 
     dummy_user = MonthGrayer(list(users.keys())[0])
     for group in groups.keys():
-        if any([users_and_pollstates[group_user]==False for group_user in groups[group]["users"]]):
+        group_users = [user for user in groups[group]["users"] if user in users.keys()] # only users (not "holidays")
+        if any([users_and_pollstates[group_user]==False for group_user in group_users]):
             continue
 
-        earliest_seen_date = min([users_and_pollstates[group_user] for group_user in groups[group]["users"]])
+        earliest_seen_date = min([users_and_pollstates[group_user] for group_user in group_users]).date()
         # compute all available days per group
         group_markings = combine_group_markings(group, dummy_user.current_dates)
 
         # get only the free and freed days and cut-off all days older than the earliest seen date
         free_days = [free_date for free_date, marking in zip(dummy_user.current_dates, group_markings) if (marking in ["free", "freed"] and free_date <= earliest_seen_date)]
-        # ToDo: Test and return group views as dicts (groups_rdy)
-        return free_days
+        # ToDo: Send that Info somewhere useful
+        groups_rdy[group] = free_days
+    return groups_rdy
 
 
 class MonthGrayer:
