@@ -10,9 +10,8 @@ app = Flask(__name__)
 # Define the path to the data folder
 rate_limit_storage_path = os.path.join(os.path.dirname(__file__), 'data', 'ratelimit')
 
-limiter = Limiter(key_func=get_remote_address,
-                  app=app,
-                  storage_uri="filesystem:///data/ratelimit")
+storage_uri = os.getenv('RATELIMIT_STORAGE_URI', 'memory://')
+limiter = Limiter(key_func=get_remote_address, app=app, storage_uri=storage_uri)
 
 
 # ToDo in case I want to ship it as a docker container alike the Raft knowledgebase website: https://github.com/aquasecurity/trivy (for automatic finding of vulnerabilities) and https://github.com/goodwithtech/dockle (for automatic image creation security)
