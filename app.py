@@ -15,12 +15,9 @@ limiter = Limiter(key_func=get_remote_address, app=app, storage_uri=storage_uri)
 
 
 # ToDo in case I want to ship it as a docker container alike the Raft knowledgebase website: https://github.com/aquasecurity/trivy (for automatic finding of vulnerabilities) and https://github.com/goodwithtech/dockle (for automatic image creation security)
-# ToDo include communities e.g. (probably via subdomains)
-# community = "1337"
-# app.register_blueprint(views, url_prefix="/" + community)
 
 # import of views must happen after initialisation of the limiter so circular import will be circumvented
-from views import views, communities
+from views import views
 app.register_blueprint(views, url_prefix="/")
 
 if __name__ == "__main__":

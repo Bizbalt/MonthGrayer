@@ -1,6 +1,6 @@
 import json
 from flask import Blueprint, render_template, jsonify, send_from_directory, redirect
-from MonthGrayer import MonthGrayer, get_settings_page, create_new_user, update_user_group, update_group_defaults, communities
+from MonthGrayer import MonthGrayer, get_settings_page, create_new_user, update_user_group, update_group_defaults
 import os
 
 from app import limiter

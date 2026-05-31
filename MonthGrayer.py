@@ -43,8 +43,6 @@ Alike the transfer of data from front-end to back-end and vice versa should be i
          from cache from the day before or over midnight 23:59:59 -> 00:00:00)     
 '''
 
-with open("data/communities.txt", "r") as communities_file:
-    communities = communities_file.read().splitlines()
 
 MONTH_RANGE = 2  # this month plus the next two months = 2
 TIMEOUT_SECONDS = 60 * 6 * 1  # The time it takes to do the poll (6 min)
