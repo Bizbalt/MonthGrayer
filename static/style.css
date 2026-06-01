@@ -48,6 +48,7 @@ button {
 /* Info box to note about a current change */
 .info_popup {
   position: absolute;
+  z-index: 1;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); /* needed so that the whole element is centered, not just the anchorpoint on the top left */
@@ -57,14 +58,14 @@ button {
   /*animation: fade-out 2s;*/
   opacity: 1; /* Start visible */
   visibility: visible; /* Start visible */
-  transition: opacity 2s cubic-bezier(0.645, 0.045, 0.355, 1),
-              transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1),
-              visibility 2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: opacity 1.5s cubic-bezier(0.645, 0.045, 0.355, 1),
+              transform 0.4s cubic-bezier(0.645, 0.045, 0.355, 1),
+              visibility 1.5s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
 .info_popup.animated {
     opacity: 0; /* Fade out */
-    transform: translate(-50%, 20%) scale(0.90); /* Move it down add a slight scale effect for more smoothness */
+    transform: translate(-50%, 50%) scale(0.90); /* Move it down add a slight scale effect for more smoothness */
     visibility: hidden; /* Make it invisible after fading out */
 }
 

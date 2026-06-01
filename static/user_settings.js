@@ -13,7 +13,7 @@ async function show_change(change) {
     setTimeout(() => {
         infobox.classList.add("animated")
     }, 100); // Delay for 100ms
-    await new Promise(r => setTimeout(r, 1900)) // wait a little bit less than the animation takes
+    await new Promise(r => setTimeout(r, 1200)) // wait a little bit less than the animation takes
     infobox.remove()
 }
 
@@ -24,10 +24,10 @@ async function update_user_groups(group){
         console.log("Failed to update user group")
     }
     else{
-        if(success.includes("removed group"))
-            goto_user_page()
         console.log(success)
         await show_change(success)
+        if(success.includes("removed group"))
+            goto_user_page()
     }
 }
 
@@ -114,6 +114,16 @@ async function settings_init(){
     new_group_fade_div.appendChild(header)
     new_group_fade_div.appendChild(default_signed_days_div)
 
+    // adding webhooks
+    const webhook_label = document.createElement("label")
+    webhook_label.innerText = "Webhooks:"
+    const group_webhooks = document.createElement("input")
+    group_webhooks.setAttribute("id","webhooks")
+    group_webhooks.setAttribute("type", "text")
+    group_webhooks.style.width = "350px"
+    group_webhooks.placeholder = "webhooks separated by spaces"
+    new_group_fade_div.appendChild(webhook_label)
+    new_group_fade_div.appendChild(group_webhooks)
 
     new_group_checkbox.addEventListener("change", () => {
         if (new_group_checkbox.checked) {
@@ -131,6 +141,7 @@ async function settings_init(){
 async function new_group(group_name){
     // create the new group
     await update_user_groups(group_name)
+
     // set the days blocked by default
     let defaults_list = []
     for (let opt = 0; opt < group_options_list.length; opt++){
@@ -139,16 +150,40 @@ async function new_group(group_name){
         else {state = 0}
         defaults_list[opt] = state
     }
-    // convert boolean to binary string
-    let result
-    result = await (await fetch(`/user_group_default/${defaults_list.join("")}/${group_name}`)).text()
-    if (result==="") {
-        console.log("something went wrong setting the default days")
+    // only send request if one or more defaults are set
+    const sum = arr => arr.reduce((acc, a) => acc + a, 0)
+    if (sum(defaults_list)>0){
+        // convert boolean to binary string
+        let result = await (await fetch(`/group_defaults/${defaults_list.join("")}/${group_name}`)).text()
+        if (result==="") {
+            console.log("something went wrong setting the default days")
+        }
+        else{
+            console.log(result)
+        await show_change(result)
+        }
     }
-    else{
-        console.log(result)
-    await show_change(result)
+
+    let webhooks = document.getElementById("webhooks").value
+    // only send request when a Webhook is given
+    if (webhooks.length>0){
+        let result2 = await fetch(`/group_hooks/${group_name}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({"webhooks": webhooks})
+        })
+        result2 = await result2.text()
+        if (result2==="") {
+            console.log("something went wrong setting webhooks")
+        }
+        else{
+            console.log(result2)
+        }
+        await show_change(result2)
     }
+
     // refresh at the end
     goto_user_page(current_username)
 }

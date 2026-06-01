@@ -148,6 +148,18 @@ def update_group_defaults(defaults, group):
     return state
 
 
+def update_group_hooks(hook_url, group):
+    groups = get_groups()
+    if group not in groups:
+        state = "group for setting hooks does not exist"
+    else:
+        groups[group]["hooks"] = hook_url.split(" ")
+        state = "updated hooks for " + group
+        with open("data/groups.json", "w") as file:
+            json.dump(groups, file, indent=1)
+    return state
+
+
 def update_seen_timer(user, action):
     match action:
         case "start":

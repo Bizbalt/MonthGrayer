@@ -1,6 +1,6 @@
 import json
-from flask import Blueprint, render_template, jsonify, send_from_directory, redirect
-from MonthGrayer import MonthGrayer, get_settings_page, create_new_user, update_user_group, update_group_defaults
+from flask import Blueprint, render_template, jsonify, send_from_directory, redirect, request
+from MonthGrayer import MonthGrayer, get_settings_page, create_new_user, update_user_group, update_group_defaults, update_group_hooks
 import os
 
 from app import limiter
@@ -89,7 +89,15 @@ def user_group_update(username, group):
     return state
 
 
-@views.route("/user_group_default/<string:defaults>/<string:group>")
-def user_group_defaults(defaults, group):
+@views.route("/group_defaults/<string:defaults>/<string:group>")
+def group_defaults(defaults, group):
     state = update_group_defaults(defaults, group)
+    return state
+
+
+@views.route("/group_hooks/<string:group>", methods=["POST"])
+def group_hooks(group):
+    data = request.get_json()
+    hooks = data.get("webhooks", "")
+    state = update_group_hooks(hooks, group)
     return state
