@@ -4,6 +4,11 @@ from dateutil.relativedelta import relativedelta
 import locale
 import json
 import threading
+import urllib.request
+import urllib.error
+import logging
+
+logger = logging.getLogger(__name__)
 
 # for German locale
 locale.setlocale(locale.LC_TIME, "de_DE.utf8")
@@ -237,6 +242,58 @@ def gen_groups_status():
         groups_rdy[group] = free_days
     return groups_rdy
 
+def send_to_discord_hook(webhook_url:str, content:str) -> bool:
+    """
+    Send the group results to a discord webhook.
+    :param webhook_url: The URL of the discord webhook
+    :param content: Information to send to the discord webhook
+    :return: Success status
+    """
+
+    # Todo: format the message
+    # https://docs.discord.com/developers/resources/webhook#execute-webhook
+    data = {
+        "content": f"{content}"
+    }
+
+    json_data = json.dumps(data).encode('utf-8')
+
+    req = urllib.request.Request(
+        url=webhook_url,
+        data=json_data,
+        method='POST'
+    )
+
+    # add necessary headers
+    req.add_header("Content-Type", "application/json")
+    # Discord sometimes blocks requests without a User-Agent, so it is best practice to include one
+    req.add_header("User-Agent", "MonthGrayer")
+
+    # execute the request
+    try:
+        with urllib.request.urlopen(req) as response:
+            # Discord returns 204 No Content on a successful webhook execution
+            if response.status == 204:
+                logging.debug("Message sent successfully!")
+                return True
+            else:
+                logging.error(f"Message sent, but received status code: {response.status}, {response.text}")
+                return False
+
+    except urllib.error.HTTPError as e:
+        # This catches 4xx and 5xx errors (like 404 Not Found or 429 Too Many Requests)
+        logging.error(f"Failed to send message. HTTP Error: {e.code} - {e.reason}")
+
+        # You can read the error body from Discord for more details
+        error_body = e.read().decode('utf-8')
+        logging.error(f"Discord response: {error_body}")
+        return False
+
+    except urllib.error.URLError as e:
+        # This catches network-level issues (like DNS failure or no internet connection)
+        logging.error(f"Failed to reach the server. Reason: {e.reason}")
+        return False
+
 
 class MonthGrayer:
     def __init__(self, current_user, month_range=MONTH_RANGE):
@@ -338,3 +395,5 @@ class MonthGrayer:
         update_seen_timer(self.user, "start")
 
         return user_choice_markings
+
+logger.info("MonthGrayer module loaded.")
